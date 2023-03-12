@@ -1,5 +1,5 @@
 # VS config
-.vscode
+.vscode/
 
 # Logs
 .angular
@@ -106,3 +106,7 @@ dist
 
 # TernJS port file
 .tern-port
+
+# Mac OSX Finder files.
+**/.DS_Store
+.DS_Store
