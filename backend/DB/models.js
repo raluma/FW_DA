@@ -19,6 +19,10 @@ export const user = {
         type: DataTypes.STRING,
         allowNull: false,
         unique: true
+    },
+    role: {
+        type: DataTypes.STRING,
+        allowNull: false
     }
 }
 
