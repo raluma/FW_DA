@@ -1,7 +1,5 @@
 import { Sequelize } from 'sequelize';
-import user from './models/user';
-import event from './models/event';
-import exam from './models/exam';
+import { sequelize, user, event, exam } from './models';
 import * as dotenv from 'dotenv';
 
 dotenv.config();
