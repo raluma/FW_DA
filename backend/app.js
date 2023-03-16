@@ -1,6 +1,6 @@
 import express from 'express';
 import * as dotenv from 'dotenv';
-import sequelize from "./db/connection.js";
+import { sequelize, User } from "./DB/sequelize.js";
 
 dotenv.config();
 const app = express();
@@ -8,12 +8,7 @@ const app = express();
 const { PORT } = process.env;
 
 app.get('/', async (req, res) => {
-  try {
-    await sequelize.authenticate();
-    res.send('Connection has been established successfully.');
-  } catch (error) {
-    res.send(`Unable to connect to the database: ${error.message}`);
-  }
+    res.send(User === sequelize.models.User);
 })
 
 app.listen(PORT, () => {
