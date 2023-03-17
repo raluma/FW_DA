@@ -26,15 +26,19 @@ export const getUser = async (login, password) => {
 
         if (loginWithUsername !== null) { return loginWithUsername; } 
         else if (loginWithEmail !== null) { return loginWithEmail; } 
-        else { return null; }
+        else { 
+            return {"error": "No existe ningún usuario con ese nombre de usuario o email."};
+        } 
 
     } catch (err) {
-        return null;
+        return {"error": "No se han enviado los parámetros"};
     }
 }
 
-export const setUser = async (username, email, password) => {
+export const createUser = async (username, email, password) => {
     let singup;
+
+    // Falta poner restricciones al usuario
 
     try {
         singup = await User.create
@@ -47,10 +51,9 @@ export const setUser = async (username, email, password) => {
             }
         );
 
-        if (singup !== null) { return true; } 
-        else { return false; }
+        if (singup !== null) { return {"exito": "Se ha registrado con éxito"}; } 
 
     } catch (err) {
-        return false;
+        return {"error": "No se han enviado los parámetros"};
     }
 }
