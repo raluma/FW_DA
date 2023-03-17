@@ -33,19 +33,20 @@ export const event = {
         primaryKey: true
     },
     date: {
-        type: DataTypes.DATE, 
-        allowNull: false,
-        defaultValue: DataTypes.NOW
+        type: DataTypes.DATEONLY, 
+        allowNull: false
+    },
+    time: {
+        type: DataTypes.STRING, 
+        allowNull: false
     },
     short_desc: {
         type: DataTypes.STRING,
         allowNull: false,
-        unique: true
     },
     desc: {
         type: DataTypes.STRING,
         allowNull: true,
-        unique: true
     },
     url_img: {
         type: DataTypes.STRING,
