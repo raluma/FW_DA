@@ -1,13 +1,14 @@
 import { Event, Exam } from "./sequelize.js";
 
 export const getEvents = async () => {
-    let mainDataEvent, dataEvent;
+    let mainDataEvents, dataEvent;
+    let events = [];
 
     try {
-        mainDataEvent = await Event.findAll();
+        mainDataEvents = await Event.findAll();
 
-        if (mainDataEvent !== null) {
-            const tag = mainDataEvent['tag'];
+        for (let i = 0; i < mainDataEvents.length; i++) {
+            const tag = mainDataEvents[i]['tag'];
 
             switch (tag) {
                 case "exam":
@@ -15,7 +16,7 @@ export const getEvents = async () => {
                     (
                         { where: 
                             { 
-                                event_id: mainDataEvent['id']
+                                event_id: mainDataEvents[i]['id']
                             } 
                         }
                     );
@@ -26,18 +27,17 @@ export const getEvents = async () => {
                     (
                         { where: 
                             { 
-                                event_id: mainDataEvent['id']
+                                event_id: mainDataEvents[i]['id']
                             } 
                         }
                     );
                     break;
             }
 
-            return {...mainDataEvent['dataValues'], ...dataEvent['dataValues']};
+            events[i] = {...mainDataEvents[i]['dataValues'], ...dataEvent['dataValues']};
         }
-        else {  
-            return {"error": "No existe ninguna tarea."}; 
-        }
+
+        return events;
 
     } catch (err) {
         return {"error": "No se han enviado los parámetros"};
