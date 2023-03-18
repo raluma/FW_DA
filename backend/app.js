@@ -1,4 +1,5 @@
 import express from 'express';
+import cors from 'cors';
 import * as dotenv from 'dotenv';
 import { getUser, createUser, setUser } from './DB/userQueries.js';
 import { getEvents, getEvent, createEvent, setEvent } from './DB/eventQueries.js';
@@ -6,7 +7,11 @@ import { getEvents, getEvent, createEvent, setEvent } from './DB/eventQueries.js
 dotenv.config();
 const app = express();
 
-const { PORT } = process.env;
+const { PORT, AUTH_WEB } = process.env;
+
+app.use(cors({
+  origin: AUTH_WEB
+}));
 
 const existError = (obj) => {
   return obj instanceof Object && obj['error'] !== undefined;
