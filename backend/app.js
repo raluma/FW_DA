@@ -56,7 +56,7 @@ app.post('/setUser', async (req, res) => {
 })
 
 app.post('/getEvents', async (req, res) => {
-  const events = await getEvents(req.query.id);
+  const events = await getEvents(req.query.user_id);
 
   if (existError(events)) {
     res.status(404).send(events);
@@ -102,7 +102,7 @@ app.post('/createEvent', async (req, res) => {
 
 app.post('/setEvent', async (req, res) => {
   const event = await setEvent (
-    req.query.id,
+    req.query.event_id,
     req.query.date, 
     req.query.time,
     req.query.short_desc,
@@ -122,5 +122,5 @@ app.post('/setEvent', async (req, res) => {
 })
 
 app.listen(PORT, () => {
-  console.log(`Example app listening on port http://localhost:${PORT}`)
+  console.log(`App Listening on port http://localhost:${PORT}`)
 })
