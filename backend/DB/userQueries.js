@@ -38,22 +38,55 @@ export const getUser = async (login, password) => {
 export const createUser = async (username, email, password) => {
     let singup;
 
-    // Falta poner restricciones al usuario
+    if (!email.includes('@')) {
+        return {"error": "El email debe contener @"};
+    }
+    else {
+        try {
+            singup = await User.create
+            (
+                {
+                    username: username,
+                    email: email,
+                    password: password,
+                    role: 'user'
+                }
+            );
 
-    try {
-        singup = await User.create
-        (
-            {
-                username: username,
-                email: email,
-                password: password,
-                role: 'user'
-            }
-        );
+            if (singup !== null) { return {"exito": "Se ha registrado con éxito"}; } 
 
-        if (singup !== null) { return {"exito": "Se ha registrado con éxito"}; } 
+        } catch (err) {
+            return {"error": "No se han enviado los parámetros"};
+        }
+    }
+}
 
-    } catch (err) {
-        return {"error": "No se han enviado los parámetros"};
+export const setUser = async (id, username, email, password) => {
+    let singup;
+
+    if (!email.includes('@')) {
+        return {"error": "El email debe contener @"};
+    } 
+    else {
+        try {
+            singup = await User.update
+            (
+                {
+                    username: username,
+                    email: email,
+                    password: password
+                },
+                { where : 
+                    {
+                        id: id
+                    }
+                }
+            );
+
+            if (singup !== null) { return {"exito": "Se ha actualizado con éxito"}; } 
+
+        } catch (err) {
+            return {"error": "No se han enviado los parámetros"};
+        }
     }
 }
