@@ -13,7 +13,8 @@ export const user = {
     },
     password: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
+        unique: false
     },
     email: {
         type: DataTypes.STRING,
@@ -22,7 +23,8 @@ export const user = {
     },
     role: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
+        unique: false
     }
 }
 
@@ -34,31 +36,38 @@ export const event = {
     },
     date: {
         type: DataTypes.DATEONLY, 
-        allowNull: false
+        allowNull: false,
+        unique: false
     },
     time: {
         type: DataTypes.STRING, 
-        allowNull: false
+        allowNull: false,
+        unique: false
     },
     short_desc: {
         type: DataTypes.STRING,
         allowNull: false,
+        unique: false
     },
     desc: {
         type: DataTypes.STRING,
         allowNull: true,
+        unique: false
     },
     url_img: {
         type: DataTypes.STRING,
         allowNull: true,
+        unique: false
     },
     tag: {
         type: DataTypes.STRING,
         allowNull: false,
+        unique: false
     },
     user_id: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: false,
+        unique: false
     }
 }
 
@@ -70,16 +79,18 @@ export const exam = {
     },
     url_doc: {
         type: DataTypes.STRING,
-        allowNull: true
+        allowNull: true,
+        unique: false
     },
     url_attachment: {
         type: DataTypes.STRING,
-        allowNull: true
+        allowNull: true,
+        unique: false
     },
     event_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
-        unique: true
+        unique: false
     }
 }
 
