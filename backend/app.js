@@ -1,7 +1,7 @@
 import express from 'express';
 import * as dotenv from 'dotenv';
-import { getUser, createUser } from './DB/userQueries.js';
-import { getEvents, getEvent } from './DB/eventQueries.js';
+import { getUser, createUser, setUser } from './DB/userQueries.js';
+import { getEvents, getEvent, createEvent, setEvent } from './DB/eventQueries.js';
 
 dotenv.config();
 const app = express();
@@ -36,7 +36,22 @@ app.post('/signup', async (req, res) => {
   if (existError(user)) {
     res.status(404).send(user);
   } else {
-    res.status(200).send();
+    res.status(200).send(user);
+  }
+})
+
+app.post('/setUser', async (req, res) => {
+  const user = await setUser (
+    req.query.id,
+    req.query.username, 
+    req.query.email,
+    req.query.password
+  );
+
+  if (existError(user)) {
+    res.status(404).send(user);
+  } else {
+    res.status(200).send(user);
   }
 })
 
@@ -56,6 +71,47 @@ app.post('/getEvent', async (req, res) => {
     req.query.time,
     req.query.short_desc,
     req.query.user_id
+  );
+
+  if (existError(event)) {
+    res.status(404).send(event);
+  } else {
+    res.status(200).send(event);
+  }
+})
+
+app.post('/createEvent', async (req, res) => {
+  const event = await createEvent (
+    req.query.date, 
+    req.query.time,
+    req.query.short_desc,
+    req.query.desc,
+    req.query.url_img,
+    req.query.tag,
+    req.query.user_id,
+    req.query.url_doc,
+    req.query.url_attachment
+  );
+
+  if (existError(event)) {
+    res.status(404).send(event);
+  } else {
+    res.status(200).send(event);
+  }
+})
+
+app.post('/setEvent', async (req, res) => {
+  const event = await setEvent (
+    req.query.id,
+    req.query.date, 
+    req.query.time,
+    req.query.short_desc,
+    req.query.desc,
+    req.query.url_img,
+    req.query.tag,
+    req.query.user_id,
+    req.query.url_doc,
+    req.query.url_attachment
   );
 
   if (existError(event)) {
