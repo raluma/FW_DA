@@ -41,7 +41,7 @@ app.post('/signup', async (req, res) => {
 })
 
 app.post('/getEvents', async (req, res) => {
-  const events = await getEvents();
+  const events = await getEvents(req.query.id);
 
   if (existError(events)) {
     res.status(404).send(events);
