@@ -2,11 +2,15 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './pages/app.component';
+import { AppComponent } from './app.component';
+import { Calendar } from './components/calendar';
+import { Home } from './pages/home';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    Home,
+    Calendar
   ],
   imports: [
     BrowserModule,
