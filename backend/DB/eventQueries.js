@@ -1,6 +1,6 @@
 import { Event, Exam } from "./sequelize.js";
 
-export const getEvents = async (id) => {
+export const getEvents = async (user_id) => {
     let mainDataEvents, dataEvent;
     let events = [];
 
@@ -9,7 +9,7 @@ export const getEvents = async (id) => {
         (
             { where: 
                 { 
-                    user_id: id
+                    user_id: user_id
                 } 
             }
         );
@@ -29,14 +29,7 @@ export const getEvents = async (id) => {
                     break;
             
                 default:
-                    dataEvent = await Exam.findOne
-                    (
-                        { where: 
-                            { 
-                                event_id: mainDataEvents[i]['id']
-                            } 
-                        }
-                    );
+                    dataEvent = [];
                     break;
             }
 
@@ -85,14 +78,7 @@ export const getEvent = async (date, time, short_desc, user_id) => {
                     break;
             
                 default:
-                    dataEvent = await Exam.findOne
-                    (
-                        { where: 
-                            { 
-                                event_id: mainDataEvent['id']
-                            } 
-                        }
-                    );
+                    dataEvent = [];
                     break;
             }
 
@@ -155,14 +141,6 @@ export const createEvent = async (date, time, short_desc, desc, url_img, tag, us
                     break;
             
                 default:
-                    dataEvent = await Exam.create
-                    (
-                        { 
-                            url_doc: url_doc,
-                            url_attachment: url_attachment,
-                            event_id: mainDataEvent['id']
-                        } 
-                    );
                     break;
             }
 
@@ -175,7 +153,7 @@ export const createEvent = async (date, time, short_desc, desc, url_img, tag, us
     }
 }
 
-export const setEvent = async (id, date, time, short_desc, desc, url_img, tag, user_id, url_doc, url_attachment) => {
+export const setEvent = async (event_id, date, time, short_desc, desc, url_img, tag, user_id, url_doc, url_attachment) => {
     let mainDataEvent, dataEvent;
 
     const arrDate = date.split("-");
@@ -197,7 +175,7 @@ export const setEvent = async (id, date, time, short_desc, desc, url_img, tag, u
             },
             { where: 
                 {
-                    id: id
+                    id: event_id
                 }
             }
         );
@@ -213,25 +191,13 @@ export const setEvent = async (id, date, time, short_desc, desc, url_img, tag, u
                         },
                         { where: 
                             {
-                                event_id: id
+                                event_id: event_id
                             }
                         }
                     );
                     break;
             
                 default:
-                    dataEvent = await Exam.update
-                    (
-                        { 
-                            url_doc: url_doc,
-                            url_attachment: url_attachment
-                        },
-                        { where: 
-                            {
-                                event_id: id
-                            }
-                        }
-                    );
                     break;
             }
 
