@@ -3,18 +3,18 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { Calendar } from './components/calendar';
+import { FullCalendarModule } from '@fullcalendar/angular';
 import { Home } from './pages/home';
 
 @NgModule({
   declarations: [
     AppComponent,
-    Home,
-    Calendar
+    Home
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    FullCalendarModule
   ],
   providers: [],
   bootstrap: [AppComponent]
