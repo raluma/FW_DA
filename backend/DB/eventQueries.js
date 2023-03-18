@@ -1,11 +1,18 @@
 import { Event, Exam } from "./sequelize.js";
 
-export const getEvents = async () => {
+export const getEvents = async (id) => {
     let mainDataEvents, dataEvent;
     let events = [];
 
     try {
-        mainDataEvents = await Event.findAll();
+        mainDataEvents = await Event.findAll
+        (
+            { where: 
+                { 
+                    user_id: id
+                } 
+            }
+        );
 
         for (let i = 0; i < mainDataEvents.length; i++) {
             const tag = mainDataEvents[i]['tag'];
@@ -40,7 +47,7 @@ export const getEvents = async () => {
         return events;
 
     } catch (err) {
-        return {"error": "No se han enviado los parámetros"};
+        return {"error": "No existen eventos para ese usuario."};
     }
 }
 
@@ -99,6 +106,6 @@ export const getEvent = async (date, time, short_desc, user_id) => {
         }
 
     } catch (err) {
-        return {"error": "No se han enviado los parámetros"};
+        return {"error": "No existe ese evento para ese usuario"};
     }
 }
