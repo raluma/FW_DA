@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import * as dotenv from 'dotenv';
-import { getUser, createUser, setUser } from './DB/userQueries.js';
+import { getUser, createUser, setUser, dropUser } from './DB/userQueries.js';
 import { getEvents, getEvent, createEvent, setEvent } from './DB/eventQueries.js';
 
 dotenv.config();
@@ -51,6 +51,18 @@ app.post('/setUser', async (req, res) => {
     req.query.username, 
     req.query.email,
     req.query.password
+  );
+
+  if (existError(user)) {
+    res.status(404).send(user);
+  } else {
+    res.status(200).send(user);
+  }
+})
+
+app.post('/dropUser', async (req, res) => {
+  const user = await dropUser (
+    req.query.login,
   );
 
   if (existError(user)) {
