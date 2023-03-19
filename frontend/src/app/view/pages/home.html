@@ -32,8 +32,16 @@
   <div class='demo-app-main'>
     <full-calendar *ngIf='calendarVisible' [options]='calendarOptions'>
        <ng-template #eventContent let-arg>
-            <b>{{ arg.timeText }}</b>
-            <i>{{ arg.event.title }}</i>
+          <article class="flex flex-row items-center ml-2">
+              <section class="flex flex-row gap-1 items-center">
+                <fa-icon [icon]="faCalendar"></fa-icon>
+                <p *ngIf='arg.event.start.getHours() !== 0'>
+                  {{ showTimes(arg.event.start) }}
+                </p>
+              </section>
+
+              <b class="m-2">{{ arg.event.title }}</b>
+          </article>
       </ng-template>
     </full-calendar>
   </div>
