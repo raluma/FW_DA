@@ -15,14 +15,13 @@ export const getEvents = async (user_id) => {
         );
 
         for (let i = 0; i < mainDataEvents.length; i++) {
-
-            switch (mainDataEvents[i]['tag']) {
+            switch (mainDataEvents['tag']) {
                 case "exam":
                     dataEvent = await Exam.findOne
                     (
                         { where: 
                             { 
-                                event_id: mainDataEvents[i]['id']
+                                event_id: mainDataEvents['id']
                             } 
                         }
                     );
@@ -49,14 +48,12 @@ export const getEvent = async (date, time, short_desc, user_id) => {
     const arrDate = date.split("-");
     const arrTime = time.split(":");
 
-    date = new Date(arrDate[2], arrDate[1]-1, arrDate[0]);
-
     try {
         mainDataEvent = await Event.findOne
         (
             { where: 
                 { 
-                    date: date,
+                    date: new Date(arrDate[0], arrDate[1]-1, arrDate[2]),
                     time: `${arrTime[0]}:${arrTime[1]}`,
                     short_desc: short_desc,
                     user_id: user_id
@@ -99,13 +96,11 @@ export const createEvent = async (date, time, short_desc, desc, url_img, tag, us
     const arrDate = date.split("-");
     const arrTime = time.split(":");
 
-    date = new Date(arrDate[2], arrDate[1]-1, arrDate[0]);
-
     try {
         mainDataEvent = await Event.create
         (
             { 
-                date: date,
+                date: new Date(arrDate[0], arrDate[1]-1, arrDate[2]),
                 time: `${arrTime[0]}:${arrTime[1]}`,
                 short_desc: short_desc,
                 desc: desc,
@@ -159,13 +154,11 @@ export const setEvent = async (event_id, date, time, short_desc, desc, url_img, 
     const arrDate = date.split("-");
     const arrTime = time.split(":");
 
-    date = new Date(arrDate[2], arrDate[1]-1, arrDate[0]);
-
     try {
         mainDataEvent = await Event.update
         (
             { 
-                date: date,
+                date: new Date(arrDate[0], arrDate[1]-1, arrDate[2]),
                 time: `${arrTime[0]}:${arrTime[1]}`,
                 short_desc: short_desc,
                 desc: desc,
