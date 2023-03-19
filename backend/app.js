@@ -22,7 +22,10 @@ app.get('/', async (req, res) => {
 })
 
 app.post('/login', async (req, res) => {
-  const user = await getUser(req.query.login, req.query.password);
+  const user = await getUser (
+    req.query.login, 
+    req.query.password
+  );
 
   if (existError(user)) {
     res.status(404).send(user);
@@ -73,68 +76,169 @@ app.post('/dropUser', async (req, res) => {
 })
 
 app.post('/getEvents', async (req, res) => {
-  const events = await getEvents(req.query.user_id);
+  const user = await getUser (
+    req.query.login, 
+    req.query.password
+  );
 
-  if (existError(events)) {
-    res.status(404).send(events);
-  } else {
-    res.status(200).send(events);
+  if (existError(user)) {
+    res.status(404).send(user);
+  } 
+  else {
+    const events = await getEvents(user.id);
+
+    if (existError(events)) {
+      res.status(404).send(events);
+    } else {
+      res.status(200).send(events);
+    }
   }
 })
 
 app.post('/getEvent', async (req, res) => {
-  const event = await getEvent (
-    req.query.date, 
-    req.query.time,
-    req.query.short_desc,
-    req.query.user_id
+  const user = await getUser (
+    req.query.login, 
+    req.query.password
   );
 
-  if (existError(event)) {
-    res.status(404).send(event);
-  } else {
-    res.status(200).send(event);
+  if (existError(user)) {
+    res.status(404).send(user);
+  } 
+  else {
+    const event = await getEvent (
+      user.id,
+      req.query.date, 
+      req.query.time,
+      req.query.short_desc
+    );
+
+    if (existError(event)) {
+      res.status(404).send(event);
+    } else {
+      res.status(200).send(event);
+    }
   }
 })
 
 app.post('/createEvent', async (req, res) => {
-  const event = await createEvent (
-    req.query.date, 
-    req.query.time,
-    req.query.short_desc,
-    req.query.desc,
-    req.query.url_img,
-    req.query.tag,
-    req.query.user_id,
-    req.query.url_doc,
-    req.query.url_attachment
+  const user = await getUser (
+    req.query.login, 
+    req.query.password
   );
 
-  if (existError(event)) {
-    res.status(404).send(event);
-  } else {
-    res.status(200).send(event);
+  if (existError(user)) {
+    res.status(404).send(user);
+  } 
+  else {
+    const tagsAdmin = [
+      'exam'
+    ]
+
+    if (user.role !== 'admin' && tagsAdmin.includes(req.query.tag)) {
+      res.status(404).send({"error": "No tiene permisos para crear ese tipo tarea."});
+    } 
+    else {
+      const event = await createEvent (
+        user.id,
+        req.query.date, 
+        req.query.time,
+        req.query.short_desc,
+        req.query.desc,
+        req.query.url_img,
+        req.query.tag,
+        req.query.url_doc,
+        req.query.url_attachment
+      );
+
+      if (existError(event)) {
+        res.status(404).send(event);
+      } 
+      else {
+        res.status(200).send(event);
+      }
+    }
   }
 })
 
 app.post('/setEvent', async (req, res) => {
-  const event = await setEvent (
-    req.query.event_id,
-    req.query.date, 
-    req.query.time,
-    req.query.short_desc,
-    req.query.desc,
-    req.query.url_img,
-    req.query.tag,
-    req.query.user_id,
-    req.query.url_doc,
-    req.query.url_attachment
+  const user = await getUser (
+    req.query.login, 
+    req.query.password
   );
 
-  if (existError(event)) {
-    res.status(404).send(event);
-  } else {
-    res.status(200).send(event);
+  if (existError(user)) {
+    res.status(404).send(user);
+  } 
+  else {
+    const tagsAdmin = [
+      'exam'
+    ]
+
+    if (user.role !== 'admin' && tagsAdmin.includes(req.query.tag)) {
+      res.status(404).send({"error": "No tiene permisos para cambiar a ese tipo tarea."});
+    } 
+    else {
+      const event = await setEvent (
+        user.id,
+        req.query.event_id,
+        req.query.date, 
+        req.query.time,
+        req.query.short_desc,
+        req.query.desc,
+        req.query.url_img,
+        req.query.tag,
+        req.query.url_doc,
+        req.query.url_attachment
+      );
+      
+      if (existError(event)) {
+        res.status(404).send(event);
+      } 
+      else {
+        res.status(200).send(event);
+      }
+    }
+  }
+})
+
+app.post('/dropEvent', async (req, res) => {
+  const user = await getUser (
+    req.query.login, 
+    req.query.password
+  );
+
+  if (existError(user)) {
+    res.status(404).send(user);
+  } 
+  else {
+    const tagsAdmin = [
+      'exam'
+    ]
+
+    if (user.role !== 'admin' && tagsAdmin.includes(req.query.tag)) {
+      res.status(404).send({"error": "No tiene permisos para cambiar a ese tipo tarea."});
+    } 
+    else {
+      const event = await setEvent (
+        user.id,
+        req.query.event_id,
+        req.query.date, 
+        req.query.time,
+        req.query.short_desc,
+        req.query.desc,
+        req.query.url_img,
+        req.query.tag,
+        req.query.url_doc,
+        req.query.url_attachment
+      );
+      
+      if (existError(event)) {
+        res.status(404).send(event);
+      } 
+      else {
+        res.status(200).send(event);
+      }
+    }
   }
 })
 
