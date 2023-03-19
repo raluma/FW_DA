@@ -1,31 +1,23 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectorRef, Component, inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { CalendarOptions, DateSelectArg, EventApi, EventClickArg, EventInput } from '@fullcalendar/core';
-import interactionPlugin from '@fullcalendar/interaction';
+import interactionPlugin, { Draggable } from '@fullcalendar/interaction';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import listPlugin from '@fullcalendar/list';
-
-const INITIAL_EVENTS: EventInput[] = [
-  {
-    id: "1",
-    title: 'All-day event',
-    start: new Date(),
-    allDay: false,
-    color: "orange"
-  },
-  {
-    id: "2",
-    title: 'All-day event2',
-    start: new Date(),
-    allDay: true
-  }
-]
 
 @Component({
   selector: 'home',
   templateUrl: '../../view/pages/home.html'
 })
 export class Home {
+  http = inject(HttpClient);
+  calendarVisible = false;
+
+  currentEvents: EventApi[] = [];
+
+  events: EventInput[] = [];
+
   calendarOptions: CalendarOptions = {
     plugins: [
       interactionPlugin,
@@ -40,7 +32,7 @@ export class Home {
     },
 
     initialView: 'dayGridMonth',
-    initialEvents: INITIAL_EVENTS,
+    events: this.events,
 
     weekends: true,
     editable: true,
@@ -54,10 +46,37 @@ export class Home {
     eventsSet: this.handleEvents.bind(this)
   };
 
-  calendarVisible = true;
-  currentEvents: EventApi[] = [];
+  ngOnInit(): void {
+    this.http.post("http://localhost:3000/getEvents?user_id=1", null)
+    .subscribe(data => {
+      let arrDate, arrTime;
 
-  constructor(private changeDetector: ChangeDetectorRef) { }
+      for (const [i, event] of Object.entries(data)) {
+        arrDate = event['date'].split("-");
+        arrTime = event['time'].split(":");
+
+        this.events.push
+        (
+          {
+            id: event['event_id'],
+            title: event['short_desc'],
+            desc: event['desc'],
+            start: new Date(arrDate[0], arrDate[1]-1, arrDate[2], arrTime[0], arrTime[1]),
+            url_img: event['url_img'],
+            tag: event['tag'],
+            user_id: event['user_id'],
+            url_doc: event['url_doc'],
+            url_attachment: event['url_attachment'],
+            allDay: false
+          }
+        )
+      }
+
+      this.calendarVisible = true;
+    });
+  }
+
+  constructor(private changeDetector: ChangeDetectorRef) {}
 
   handleWeekendsToggle() {
     const { calendarOptions } = this;
@@ -88,9 +107,21 @@ export class Home {
   }
 
   handleEvents(events: EventApi[]) {
-    this.currentEvents = events;
     this.changeDetector.detectChanges();
-    console.log(events);
+    
+    events.forEach(event => {
+      if (event.start?.getMonth !== undefined) {
+        let date = `${event.start.getFullYear()}-${event.start.getMonth()+1}-${event.start.getDate()}`;
+        let time = `${event.start?.getHours()}:${event.start?.getMinutes()}`;
+
+        this.http.post(`http://localhost:3000/setEvent?event_id=${event.id}&date=${date}&time=${time}&short_desc=${event.title}&desc=${event.extendedProps['desc']}&url_img=${event.extendedProps['url_img']}&tag=${event.extendedProps['tag']}&user_id=${event.extendedProps['user_id']}&url_doc=${event.extendedProps['url_doc']}&url_attachment=${event.extendedProps['url_attachment']}`, null)
+          .subscribe(data => {
+            console.log(data);
+        });
+      }
+    }) 
+
+    
   }
 }
 
