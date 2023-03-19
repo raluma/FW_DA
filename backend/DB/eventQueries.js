@@ -213,7 +213,7 @@ export const setEvent = async (user_id, event_id, date, time, short_desc, desc, 
     }
 }
 
-export const dropEvent = async (user_id, event_id) => {
+export const dropEvent = async (user_id, event_id, tag) => {
     let mainDataEvent, dataEvent;
 
     try {
