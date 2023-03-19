@@ -37,28 +37,26 @@ export const getUser = async (login, password) => {
 
 export const createUser = async (username, email, password) => {
     let singup;
-
-    if (!email.includes('@')) {
-        return {"error": "El email debe contener @"};
-    }
-    else {
+    
         try {
-            singup = await User.create
-            (
-                {
-                    username: username,
-                    email: email,
-                    password: password,
-                    role: 'user'
-                }
-            );
+            if (!email.includes('@')) {
+                return {"error": "El email debe contener @"};
+            } else {
+                singup = await User.create
+                (
+                    {
+                        username: username,
+                        email: email,
+                        password: password,
+                        role: 'user'
+                    }
+                );
 
-            if (singup !== null) { return {"exito": "Se ha registrado con éxito"}; } 
-
+                if (singup !== null) { return {"exito": "Se ha registrado con éxito"}; } 
+            }
         } catch (err) {
-            return {"error": "No se han enviado los parámetros"};
+            return {"error": "No se han enviado los parámetros necesarios."};
         }
-    }
 }
 
 export const setUser = async (login, username, email, password) => {
@@ -100,7 +98,36 @@ export const setUser = async (login, username, email, password) => {
             if (singupUsername !== null || sigupEmail !== null) { return {"exito": "Se ha actualizado con éxito"}; } 
 
         } catch (err) {
-            return {"error": "No se han enviado los parámetros"};
+            return {"error": "No se han enviado los parámetros necesarios."};
         }
+    }
+}
+
+export const dropUser = async (login) => {
+    let dropByUsername, dropByEmail;
+
+    try {
+        dropByUsername = await User.destroy
+        (
+            { where : 
+                {
+                    username: login
+                }
+            }
+        );
+
+        dropByEmail = await User.destroy
+        (
+            { where : 
+                {
+                    email: login
+                }
+            }
+        );
+
+        if (dropByUsername !== null || dropByEmail !== null) { return {"exito": "Se ha borrado con éxito"}; } 
+
+    } catch (err) {
+        return {"error": "No se han enviado los parámetros necesarios."};
     }
 }
