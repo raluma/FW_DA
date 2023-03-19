@@ -47,7 +47,7 @@ app.post('/signup', async (req, res) => {
 
 app.post('/setUser', async (req, res) => {
   const user = await setUser (
-    req.query.id,
+    req.query.login,
     req.query.username, 
     req.query.email,
     req.query.password
