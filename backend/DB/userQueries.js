@@ -61,15 +61,15 @@ export const createUser = async (username, email, password) => {
     }
 }
 
-export const setUser = async (id, username, email, password) => {
-    let singup;
+export const setUser = async (login, username, email, password) => {
+    let singupUsername, sigupEmail;
 
     if (!email.includes('@')) {
         return {"error": "El email debe contener @"};
     } 
     else {
         try {
-            singup = await User.update
+            singupUsername = await User.update
             (
                 {
                     username: username,
@@ -78,12 +78,26 @@ export const setUser = async (id, username, email, password) => {
                 },
                 { where : 
                     {
-                        id: id
+                        username: login
                     }
                 }
             );
 
-            if (singup !== null) { return {"exito": "Se ha actualizado con éxito"}; } 
+            sigupEmail = await User.update
+            (
+                {
+                    username: username,
+                    email: email,
+                    password: password
+                },
+                { where : 
+                    {
+                        email: login
+                    }
+                }
+            );
+
+            if (singupUsername !== null || sigupEmail !== null) { return {"exito": "Se ha actualizado con éxito"}; } 
 
         } catch (err) {
             return {"error": "No se han enviado los parámetros"};
