@@ -5,6 +5,7 @@ import interactionPlugin, { Draggable } from '@fullcalendar/interaction';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import listPlugin from '@fullcalendar/list';
+import { faCalendar } from '@fortawesome/free-regular-svg-icons';
 
 @Component({
   selector: 'home',
@@ -13,6 +14,7 @@ import listPlugin from '@fullcalendar/list';
 export class Home {
   http = inject(HttpClient);
   calendarVisible = false;
+  faCalendar = faCalendar;
 
   currentEvents: EventApi[] = [];
 
@@ -46,6 +48,16 @@ export class Home {
     eventsSet: this.handleEvents.bind(this)
   };
 
+  showTimes(times : Date) {
+    let meridiem = times.getHours() > 12 ? 'pm' : 'am';
+
+    if (times.getMinutes() !== 0) {
+      return `${times.getHours()}:${times.getMinutes()}${meridiem}`;
+    } else {
+      return `${times.getHours()}${meridiem}`;
+    }
+  }
+
   ngOnInit(): void {
     this.http.post("http://localhost:3000/getEvents?user_id=1", null)
     .subscribe(data => {
@@ -67,7 +79,7 @@ export class Home {
             user_id: event['user_id'],
             url_doc: event['url_doc'],
             url_attachment: event['url_attachment'],
-            allDay: false
+            allDay: event['time'] === "0:0" ? true : false
           }
         )
       }
@@ -77,6 +89,37 @@ export class Home {
   }
 
   constructor(private changeDetector: ChangeDetectorRef) {}
+
+  handleEvents(events: EventApi[]) {
+    this.changeDetector.detectChanges();
+    let change = false;
+
+    for (let i = 0; i < this.events.length; i++) {
+      if (this.events[i].start?.toString() !== events[i].start?.toString()) change = true;
+      if (this.events[i].title !== events[i].title) change = true;
+      if (this.events[i]['desc'] !== events[i].extendedProps['desc']) change = true;
+      if (this.events[i]['url_img'] !== events[i].extendedProps['url_img']) change = true;
+      if (this.events[i]['tag'] !== events[i].extendedProps['tag']) change = true;
+      if (this.events[i]['url_doc'] !== events[i].extendedProps['url_doc']) change = true;
+      if (this.events[i]['url_attachment'] !== events[i].extendedProps['url_attachment']) change = true;
+    }
+
+    console.log(change);
+
+    if (change) {
+      events.forEach(event => {
+        if (event.start?.getMonth !== undefined) {
+          let date = `${event.start.getFullYear()}-${event.start.getMonth()+1}-${event.start.getDate()}`;
+          let time = `${event.start?.getHours()}:${event.start?.getMinutes()}`;
+
+          this.http.post(`http://localhost:3000/setEvent?event_id=${event.id}&date=${date}&time=${time}&short_desc=${event.title}&desc=${event.extendedProps['desc']}&url_img=${event.extendedProps['url_img']}&tag=${event.extendedProps['tag']}&user_id=${event.extendedProps['user_id']}&url_doc=${event.extendedProps['url_doc']}&url_attachment=${event.extendedProps['url_attachment']}`, null)
+            .subscribe(data => {
+              console.log(data);
+          });
+        }
+      });
+    }
+  }
 
   handleWeekendsToggle() {
     const { calendarOptions } = this;
@@ -105,26 +148,7 @@ export class Home {
       clickInfo.event.remove();
     }
   }
-
-  handleEvents(events: EventApi[]) {
-    this.changeDetector.detectChanges();
-    
-    events.forEach(event => {
-      if (event.start?.getMonth !== undefined) {
-        let date = `${event.start.getFullYear()}-${event.start.getMonth()+1}-${event.start.getDate()}`;
-        let time = `${event.start?.getHours()}:${event.start?.getMinutes()}`;
-
-        this.http.post(`http://localhost:3000/setEvent?event_id=${event.id}&date=${date}&time=${time}&short_desc=${event.title}&desc=${event.extendedProps['desc']}&url_img=${event.extendedProps['url_img']}&tag=${event.extendedProps['tag']}&user_id=${event.extendedProps['user_id']}&url_doc=${event.extendedProps['url_doc']}&url_attachment=${event.extendedProps['url_attachment']}`, null)
-          .subscribe(data => {
-            console.log(data);
-        });
-      }
-    }) 
-
-    
-  }
 }
-
 
 
  
