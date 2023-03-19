@@ -42,7 +42,7 @@ export const getEvents = async (user_id) => {
     }
 }
 
-export const getEvent = async (date, time, short_desc, user_id) => {
+export const getEvent = async (user_id, date, time, short_desc) => {
     let mainDataEvent, dataEvent;
 
     try {
@@ -148,7 +148,7 @@ export const createEvent = async (date, time, short_desc, desc, url_img, tag, us
     }
 }
 
-export const setEvent = async (event_id, date, time, short_desc, desc, url_img, tag, user_id, url_doc, url_attachment) => {
+export const setEvent = async (user_id, event_id, date, time, short_desc, desc, url_img, tag, url_doc, url_attachment) => {
     let mainDataEvent, dataEvent;
 
     try {
@@ -202,3 +202,4 @@ export const setEvent = async (event_id, date, time, short_desc, desc, url_img, 
         return {"error": "No se han enviado los parámetros."};
     }
 }
+
