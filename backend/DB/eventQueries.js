@@ -45,10 +45,10 @@ export const getEvents = async (user_id) => {
 export const getEvent = async (date, time, short_desc, user_id) => {
     let mainDataEvent, dataEvent;
 
-    const arrDate = date.split("-");
-    const arrTime = time.split(":");
-
     try {
+        const arrDate = date.split("-");
+        const arrTime = time.split(":");
+
         mainDataEvent = await Event.findOne
         (
             { where: 
@@ -86,17 +86,17 @@ export const getEvent = async (date, time, short_desc, user_id) => {
         }
 
     } catch (err) {
-        return {"error": "No existe ese evento para ese usuario"};
+        return {"error": "No se ha encontrado ese evento para ese usuario"};
     }
 }
 
 export const createEvent = async (date, time, short_desc, desc, url_img, tag, user_id, url_doc, url_attachment) => {
     let mainDataEvent, dataEvent;
 
-    const arrDate = date.split("-");
-    const arrTime = time.split(":");
-
     try {
+        const arrDate = date.split("-");
+        const arrTime = time.split(":");
+
         mainDataEvent = await Event.create
         (
             { 
@@ -151,10 +151,10 @@ export const createEvent = async (date, time, short_desc, desc, url_img, tag, us
 export const setEvent = async (event_id, date, time, short_desc, desc, url_img, tag, user_id, url_doc, url_attachment) => {
     let mainDataEvent, dataEvent;
 
-    const arrDate = date.split("-");
-    const arrTime = time.split(":");
-
     try {
+        const arrDate = date.split("-");
+        const arrTime = time.split(":");
+
         mainDataEvent = await Event.update
         (
             { 
