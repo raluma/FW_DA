@@ -211,33 +211,24 @@ app.post('/dropEvent', async (req, res) => {
     res.status(404).send(user);
   } 
   else {
-    const tagsAdmin = [
-      'exam'
-    ]
-
-    if (user.role !== 'admin' && tagsAdmin.includes(req.query.tag)) {
-      res.status(404).send({"error": "No tiene permisos para cambiar a ese tipo tarea."});
+    const event = await setEvent (
+      user.id,
+      req.query.event_id,
+      req.query.date, 
+      req.query.time,
+      req.query.short_desc,
+      req.query.desc,
+      req.query.url_img,
+      req.query.tag,
+      req.query.url_doc,
+      req.query.url_attachment
+    );
+    
+    if (existError(event)) {
+      res.status(404).send(event);
     } 
     else {
-      const event = await setEvent (
-        user.id,
-        req.query.event_id,
-        req.query.date, 
-        req.query.time,
-        req.query.short_desc,
-        req.query.desc,
-        req.query.url_img,
-        req.query.tag,
-        req.query.url_doc,
-        req.query.url_attachment
-      );
-      
-      if (existError(event)) {
-        res.status(404).send(event);
-      } 
-      else {
-        res.status(200).send(event);
-      }
+      res.status(200).send(event);
     }
   }
 })
