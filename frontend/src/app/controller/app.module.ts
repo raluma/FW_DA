@@ -4,6 +4,7 @@ import { HttpClientModule} from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { Home } from './pages/home';
 import { FullCalendarModule } from '@fullcalendar/angular';
 
@@ -16,6 +17,7 @@ import { FullCalendarModule } from '@fullcalendar/angular';
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
+    FontAwesomeModule,
     FullCalendarModule
   ],
   providers: [],
