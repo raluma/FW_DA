@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import * as dotenv from 'dotenv';
 import { getUser, createUser, setUser, dropUser } from './DB/userQueries.js';
-import { getEvents, getEvent, createEvent, setEvent } from './DB/eventQueries.js';
+import { getEvents, getEvent, createEvent, setEvent, dropEvent } from './DB/eventQueries.js';
 
 dotenv.config();
 const app = express();
@@ -211,17 +211,10 @@ app.post('/dropEvent', async (req, res) => {
     res.status(404).send(user);
   } 
   else {
-    const event = await setEvent (
+    const event = await dropEvent (
       user.id,
       req.query.event_id,
-      req.query.date, 
-      req.query.time,
-      req.query.short_desc,
-      req.query.desc,
-      req.query.url_img,
-      req.query.tag,
-      req.query.url_doc,
-      req.query.url_attachment
+      req.query.tag
     );
     
     if (existError(event)) {
