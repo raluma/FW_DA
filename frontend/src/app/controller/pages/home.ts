@@ -14,10 +14,6 @@ import { faCalendar } from '@fortawesome/free-regular-svg-icons';
 export class Home {
   http = inject(HttpClient);
 
-  loged = false;
-  login = "";
-  password = "";
-
   calendarVisible = false;
   faCalendar = faCalendar;
 
