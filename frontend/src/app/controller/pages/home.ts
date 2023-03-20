@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { CalendarOptions, DateSelectArg, EventApi, EventClickArg, EventInput } from '@fullcalendar/core';
-import interactionPlugin, { Draggable } from '@fullcalendar/interaction';
+import interactionPlugin from '@fullcalendar/interaction';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import listPlugin from '@fullcalendar/list';
@@ -13,12 +13,15 @@ import { faCalendar } from '@fortawesome/free-regular-svg-icons';
 })
 export class Home {
   http = inject(HttpClient);
+
+  loged = false;
+  login = "";
+  password = "";
+
   calendarVisible = false;
   faCalendar = faCalendar;
 
-  currentEvents: EventApi[] = [];
-
-  events: EventInput[] = [];
+  initialEvents: EventInput[] = [];
 
   calendarOptions: CalendarOptions = {
     plugins: [
@@ -34,7 +37,7 @@ export class Home {
     },
 
     initialView: 'dayGridMonth',
-    events: this.events,
+    initialEvents: this.initialEvents,
 
     weekends: true,
     editable: true,
@@ -59,7 +62,7 @@ export class Home {
   }
 
   ngOnInit(): void {
-    this.http.post("http://localhost:3000/getEvents?user_id=1", null)
+    this.http.post("http://localhost:3000/getEvents?login=Ralu&password=1234", null)
     .subscribe(data => {
       let arrDate, arrTime;
 
@@ -67,7 +70,7 @@ export class Home {
         arrDate = event['date'].split("-");
         arrTime = event['time'].split(":");
 
-        this.events.push
+        this.initialEvents.push
         (
           {
             id: event['event_id'],
@@ -94,17 +97,15 @@ export class Home {
     this.changeDetector.detectChanges();
     let change = false;
 
-    for (let i = 0; i < this.events.length; i++) {
-      if (this.events[i].start?.toString() !== events[i].start?.toString()) change = true;
-      if (this.events[i].title !== events[i].title) change = true;
-      if (this.events[i]['desc'] !== events[i].extendedProps['desc']) change = true;
-      if (this.events[i]['url_img'] !== events[i].extendedProps['url_img']) change = true;
-      if (this.events[i]['tag'] !== events[i].extendedProps['tag']) change = true;
-      if (this.events[i]['url_doc'] !== events[i].extendedProps['url_doc']) change = true;
-      if (this.events[i]['url_attachment'] !== events[i].extendedProps['url_attachment']) change = true;
+    for (let i = 0; i < this.initialEvents.length; i++) {
+      if (this.initialEvents[i].start?.toString() !== events[i].start?.toString()) change = true;
+      if (this.initialEvents[i].title !== events[i].title) change = true;
+      if (this.initialEvents[i]['desc'] !== events[i].extendedProps['desc']) change = true;
+      if (this.initialEvents[i]['url_img'] !== events[i].extendedProps['url_img']) change = true;
+      if (this.initialEvents[i]['tag'] !== events[i].extendedProps['tag']) change = true;
+      if (this.initialEvents[i]['url_doc'] !== events[i].extendedProps['url_doc']) change = true;
+      if (this.initialEvents[i]['url_attachment'] !== events[i].extendedProps['url_attachment']) change = true;
     }
-
-    console.log(change);
 
     if (change) {
       events.forEach(event => {
@@ -112,7 +113,7 @@ export class Home {
           let date = `${event.start.getFullYear()}-${event.start.getMonth()+1}-${event.start.getDate()}`;
           let time = `${event.start?.getHours()}:${event.start?.getMinutes()}`;
 
-          this.http.post(`http://localhost:3000/setEvent?event_id=${event.id}&date=${date}&time=${time}&short_desc=${event.title}&desc=${event.extendedProps['desc']}&url_img=${event.extendedProps['url_img']}&tag=${event.extendedProps['tag']}&user_id=${event.extendedProps['user_id']}&url_doc=${event.extendedProps['url_doc']}&url_attachment=${event.extendedProps['url_attachment']}`, null)
+          this.http.post(`http://localhost:3000/setEvent?login=Ralu&password=1234&event_id=${event.id}&date=${date}&time=${time}&short_desc=${event.title}&desc=${event.extendedProps['desc']}&url_img=${event.extendedProps['url_img']}&tag=${event.extendedProps['tag']}&url_doc=${event.extendedProps['url_doc']}&url_attachment=${event.extendedProps['url_attachment']}`, null)
             .subscribe(data => {
               console.log(data);
           });
