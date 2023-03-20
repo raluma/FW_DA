@@ -4,4 +4,8 @@ import { Component } from '@angular/core';
   selector: 'app-root',
   templateUrl: '../view/app.component.html'
 })
-export class AppComponent { }
+export class AppComponent {
+  authUser = "";
+  password = "";
+  loged = false;
+}
