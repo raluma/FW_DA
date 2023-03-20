@@ -9,12 +9,14 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { Header } from './components/header';
 import { Home } from './pages/home';
 import { FullCalendarModule } from '@fullcalendar/angular';
+import { LoginForm } from './components/loginForm';
 
 @NgModule({
   declarations: [
     AppComponent,
     Header,
-    Home
+    Home,
+    LoginForm
   ],
   imports: [
     BrowserModule,
