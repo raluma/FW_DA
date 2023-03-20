@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
 import { faUser, faRightToBracket } from '@fortawesome/free-solid-svg-icons';
 import { Home } from '../pages/home';
 
@@ -11,6 +12,19 @@ import { Home } from '../pages/home';
     faRightToBracket = faRightToBracket;
 
     showModal = false;
+
+    form = new FormGroup(
+      {
+        authUser: new FormControl(),
+        password: new FormControl()
+      }
+    )
+
+    login(e: Event) {
+      e.preventDefault();
+      console.log(this.form.value)
+      this.showModal = false;
+    }
 
     toggleModal(){
       this.showModal = !this.showModal;
