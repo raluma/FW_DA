@@ -1,13 +1,13 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { faUser, faRightToBracket } from '@fortawesome/free-solid-svg-icons';
-import { Home } from '../pages/home';
+import { AppComponent } from '../app.component';
 
 @Component({
     selector: 'header',
     templateUrl: '../../view/components/header.html'
   })
-  export class Header extends Home {
+  export class Header extends AppComponent {
     faUser = faUser;
     faRightToBracket = faRightToBracket;
 
@@ -24,17 +24,15 @@ import { Home } from '../pages/home';
       e.preventDefault();
       console.log(this.form.value)
       this.showModal = false;
-    }
 
-    toggleModal(){
-      this.showModal = !this.showModal;
-    }
-
-    formLogin() {
       // this.http.post("http://localhost:3000/getEvents?login=Ralu&password=1234", null)
       //   .subscribe(data => {
           
       // });
+    }
+
+    toggleModal(){
+      this.showModal = !this.showModal;
     }
 
     closeSession() {
