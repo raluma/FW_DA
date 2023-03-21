@@ -27,9 +27,11 @@ import { faUser, faRightToBracket } from '@fortawesome/free-solid-svg-icons';
       const { authUser, password} = this.form.value;
   
       this.http.post(`http://localhost:3000/login?login=${authUser}&password=${password}`, null)
-        .subscribe(data => {
-          console.log(data);
+        .subscribe((data) => {
+          this.authUser = authUser;
+          this.password = password;
           this.loged = true;
+          console.log(data);
       });
     }
 
