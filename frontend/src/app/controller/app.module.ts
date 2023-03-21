@@ -9,7 +9,6 @@ import { AppComponent } from './app.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { Home } from './pages/home';
 import { Header } from './components/header';
-import { ModalAccess } from './components/modalAccess';
 import { LoginForm } from './components/loginForm';
 import { Calendar } from './components/calendar';
 
@@ -18,7 +17,6 @@ import { Calendar } from './components/calendar';
     AppComponent,
     Home,
     Header,
-    ModalAccess,
     LoginForm,
     Calendar
   ],

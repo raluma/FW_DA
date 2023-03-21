@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
-import { Header } from './header';
+import { Home } from '../pages/home';
 
 @Component({
     selector: 'login',
     templateUrl: '../../view/components/loginForm.html'
   })
-  export class LoginForm extends Header { }
+  export class LoginForm extends Home { }

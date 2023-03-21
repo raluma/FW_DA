@@ -12,7 +12,7 @@ import { Home } from '../pages/home';
     templateUrl: '../../view/components/calendar.html'
   })
   export class Calendar extends Home {
-    calendarVisible = false;
+    calendarVisible = true;
     faCalendar = faCalendar;
   
     initialEvents: EventInput[] = [];
@@ -56,7 +56,9 @@ import { Home } from '../pages/home';
     }
   
     ngOnInit(): void {
-      this.http.post("http://localhost:3000/getEvents?login=Ralu&password=1234", null)
+      const { authUser, password } = this.form.value;
+
+      this.http.post(`http://localhost:3000/getEvents?login=${authUser}&password=${password}`, null)
       .subscribe(data => {
         let arrDate, arrTime;
   
@@ -80,8 +82,6 @@ import { Home } from '../pages/home';
             }
           )
         }
-  
-        this.calendarVisible = true;
       });
     }
   
