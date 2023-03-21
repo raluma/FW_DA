@@ -1,46 +1,5 @@
 <header class="flex flex-row justify-end items-center w-full h-16 bg-black"></header>
 
-<div class='homebody flex flex-row p-5'>
-  <aside class='homebody-left w-1/5 py-8 px-10'>
-    <div class='demo-app-sidebar-section'>
-      <h2>Instrucciones</h2>
-      <ul>
-        <li>Seleccione las fechas para crear un nuevo evento</li>
-        <li>Haga clic en un evento para eliminarlo</li>
-      </ul>
-    </div>
-
-    <div class='demo-app-sidebar-section'>
-      <label>
-        <input
-          type='checkbox'
-          [checked]='calendarOptions.weekends'
-          (change)='handleWeekendsToggle()'
-        />
-        Alternar fines de semana
-      </label>
-    </div>
-    <div class='demo-app-sidebar-section'>
-      <h2>Todos los eventos ({{initialEvents.length}})</h2>
-    </div>
-  </aside>
-
-  <main class='homebody-right w-4/5'>
-    <full-calendar *ngIf='calendarVisible' [options]='calendarOptions'>
-       <ng-template #eventContent let-arg>
-          <article class="flex flex-row items-center ml-2">
-              <section class="flex flex-row gap-1 items-center">
-                <fa-icon [icon]="faCalendar"></fa-icon>
-                <p *ngIf='arg.event.start.getHours() !== 0'>
-                  {{ showTimes(arg.event.start) }}
-                </p>
-              </section>
-
-              <b class="m-2">{{ arg.event.title }}</b>
-          </article>
-      </ng-template>
-    </full-calendar>
-  </main>
-</div>
+<calendar class="homebody flex flex-row p-5"></calendar>
 
 
