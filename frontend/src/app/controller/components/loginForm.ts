@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
-import { ModalAccess } from './modalAccess';
+import { Header } from './header';
 
 @Component({
     selector: 'login',
     templateUrl: '../../view/components/loginForm.html'
   })
-  export class LoginForm extends ModalAccess { }
+  export class LoginForm extends Header { }
