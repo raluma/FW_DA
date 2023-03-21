@@ -1,22 +1,26 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule} from '@angular/common/http';
+import { ReactiveFormsModule } from '@angular/forms';
+import { FullCalendarModule } from '@fullcalendar/angular';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { Header } from './components/header';
 import { Home } from './pages/home';
-import { FullCalendarModule } from '@fullcalendar/angular';
+import { Header } from './components/header';
+import { ModalAccess } from './components/modalAccess';
 import { LoginForm } from './components/loginForm';
+import { Calendar } from './components/calendar';
 
 @NgModule({
   declarations: [
     AppComponent,
-    Header,
     Home,
-    LoginForm
+    Header,
+    ModalAccess,
+    LoginForm,
+    Calendar
   ],
   imports: [
     BrowserModule,
