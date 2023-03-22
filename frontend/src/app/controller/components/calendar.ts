@@ -49,12 +49,10 @@ import { Home } from '../pages/home';
     };
   
     showTimes(times : Date) {
-      let meridiem = times.getHours() > 12 ? 'pm' : 'am';
-  
       if (times.getMinutes() !== 0) {
-        return `${times.getHours()}:${times.getMinutes()}${meridiem}`;
+        return `${times.getHours()}:${times.getMinutes()}h`;
       } else {
-        return `${times.getHours()}${meridiem}`;
+        return `${times.getHours()}h`;
       }
     }
   
