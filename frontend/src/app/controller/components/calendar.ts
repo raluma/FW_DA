@@ -12,8 +12,11 @@ import { Home } from '../pages/home';
     templateUrl: '../../view/components/calendar.html'
   })
   export class Calendar extends Home {
-    calendarVisible = true;
+    calendarVisible = false;
     faCalendar = faCalendar;
+
+    authUser = sessionStorage.getItem("authUser");
+    password = sessionStorage.getItem("password");
   
     initialEvents: EventInput[] = [];
   
@@ -56,9 +59,7 @@ import { Home } from '../pages/home';
     }
   
     ngOnInit(): void {
-      const { authUser, password } = this.form.value;
-
-      this.http.post(`http://localhost:3000/getEvents?login=${authUser}&password=${password}`, null)
+      this.http.post(`http://localhost:3000/getEvents?login=${this.authUser}&password=${this.password}`, null)
       .subscribe(data => {
         let arrDate, arrTime;
   
@@ -82,6 +83,8 @@ import { Home } from '../pages/home';
             }
           )
         }
+
+        this.calendarVisible = true;
       });
     }
   
@@ -107,7 +110,7 @@ import { Home } from '../pages/home';
             let date = `${event.start.getFullYear()}-${event.start.getMonth()+1}-${event.start.getDate()}`;
             let time = `${event.start?.getHours()}:${event.start?.getMinutes()}`;
   
-            this.http.post(`http://localhost:3000/setEvent?login=Ralu&password=1234&event_id=${event.id}&date=${date}&time=${time}&short_desc=${event.title}&desc=${event.extendedProps['desc']}&url_img=${event.extendedProps['url_img']}&tag=${event.extendedProps['tag']}&url_doc=${event.extendedProps['url_doc']}&url_attachment=${event.extendedProps['url_attachment']}`, null)
+            this.http.post(`http://localhost:3000/setEvent?login=${this.authUser}&password=${this.password}&event_id=${event.id}&date=${date}&time=${time}&short_desc=${event.title}&desc=${event.extendedProps['desc']}&url_img=${event.extendedProps['url_img']}&tag=${event.extendedProps['tag']}&url_doc=${event.extendedProps['url_doc']}&url_attachment=${event.extendedProps['url_attachment']}`, null)
               .subscribe(data => {
                 console.log(data);
             });
