@@ -15,8 +15,8 @@ import { Home } from '../pages/home';
     calendarVisible = false;
     faCalendar = faCalendar;
 
-    authUser = sessionStorage.getItem("authUser");
-    password = sessionStorage.getItem("password");
+    authUser = localStorage.getItem("authUser");
+    password = localStorage.getItem("password");
   
     initialEvents: EventInput[] = [];
   

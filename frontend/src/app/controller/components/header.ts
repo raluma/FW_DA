@@ -31,14 +31,14 @@ import { faUser, faRightToBracket } from '@fortawesome/free-solid-svg-icons';
   
       this.http.post(`http://localhost:3000/login?login=${authUser}&password=${password}`, null)
         .subscribe(() => {
-          sessionStorage.setItem("authUser", authUser);
-          sessionStorage.setItem("password", password);
+          localStorage.setItem("authUser", authUser);
+          localStorage.setItem("password", password);
           this.toggleModal();
       });
     }
 
     logout() {
-      sessionStorage.removeItem("authUser");
-      sessionStorage.removeItem("password");
+      localStorage.removeItem("authUser");
+      localStorage.removeItem("password");
     }
   }
