@@ -9,6 +9,6 @@ export class AppComponent {
   http = inject(HttpClient);
 
   isLoged() {
-    return sessionStorage.getItem("authUser") !== null;
+    return localStorage.getItem("authUser") !== null;
   }
 }
