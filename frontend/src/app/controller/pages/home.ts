@@ -7,7 +7,7 @@ import { AppComponent } from '../app.component';
 })
 export class Home extends AppComponent { 
   showProfile() {
-    alert("Acceso al perfil");
+    window.location.href = 'profile';
   }
 }
 
