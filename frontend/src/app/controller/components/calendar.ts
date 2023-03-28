@@ -124,25 +124,40 @@ import { Home } from '../pages/home';
     }
   
     handleDateSelect(selectInfo: DateSelectArg) {
-      const title = prompt('Please enter a new title for your event');
-      const calendarApi = selectInfo.view.calendar;
-  
-      calendarApi.unselect(); // clear date selection
-  
-      if (title) {
-        calendarApi.addEvent({
-          id: "1",
-          title,
-          start: selectInfo.startStr,
-          end: selectInfo.endStr,
-          allDay: selectInfo.allDay
-        });
+      if (confirm(`¿Quieres crear un evento nuevo?`)) {
+        const startDate = `${selectInfo.start.getFullYear()}-${selectInfo.start.getMonth()+1}-${selectInfo.start.getDate()}`;
+        const startTime = `${selectInfo.start.getHours()}:${selectInfo.start.getMinutes()}`;
+
+        window.location.href = `addEvent/${startDate}&${startTime}`;
       }
+      // const title = prompt('Please enter a new title for your event');
+      // const calendarApi = selectInfo.view.calendar;
+  
+      // calendarApi.unselect(); // clear date selection
+  
+      // if (title) {
+      //   calendarApi.addEvent({
+      //     id: "1",
+      //     title,
+      //     start: selectInfo.startStr,
+      //     end: selectInfo.endStr,
+      //     allDay: selectInfo.allDay
+      //   });
+      // }
     }
   
     handleEventClick(clickInfo: EventClickArg) {
-      if (confirm(`Are you sure you want to delete the event '${clickInfo.event.title}'`)) {
-        clickInfo.event.remove();
+      if (confirm(`¿Quieres editar el evento '${clickInfo.event.title}'?`)) {
+        if (clickInfo.event.start?.getMonth !== undefined) {
+          const startDate = `${clickInfo.event.start.getFullYear()}-${clickInfo.event.start.getMonth()+1}-${clickInfo.event.start.getDate()}`;
+          const startTime = `${clickInfo.event.start.getHours()}:${clickInfo.event.start.getMinutes()}`;
+        
+          window.location.href = 
+          `editEvent/${clickInfo.event.title}/${startDate}&${startTime}/`;
+        }
       }
+      // if (confirm(`Are you sure you want to delete the event '${clickInfo.event.title}'`)) {
+      //   clickInfo.event.remove();
+      // }
     }
   }
