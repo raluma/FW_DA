@@ -4,7 +4,7 @@ import interactionPlugin from '@fullcalendar/interaction';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import listPlugin from '@fullcalendar/list';
-import { faCalendar } from '@fortawesome/free-regular-svg-icons';
+import { faCalendar, faEdit } from '@fortawesome/free-regular-svg-icons';
 import { Home } from '../pages/home';
 
 @Component({
@@ -14,6 +14,7 @@ import { Home } from '../pages/home';
   export class Calendar extends Home {
     calendarVisible = false;
     faCalendar = faCalendar;
+    faEdit = faEdit;
 
     authUser = localStorage.getItem("authUser");
     password = localStorage.getItem("password");
