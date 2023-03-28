@@ -34,12 +34,22 @@ export const event = {
         autoIncrement: true,
         primaryKey: true
     },
-    date: {
+    startDate: {
         type: DataTypes.DATEONLY, 
         allowNull: false,
         unique: false
     },
-    time: {
+    startTime: {
+        type: DataTypes.STRING, 
+        allowNull: false,
+        unique: false
+    },
+    endDate: {
+        type: DataTypes.DATEONLY, 
+        allowNull: false,
+        unique: false
+    },
+    endTime: {
         type: DataTypes.STRING, 
         allowNull: false,
         unique: false
@@ -90,7 +100,7 @@ export const exam = {
     event_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
-        unique: false
+        unique: true
     }
 }
 
