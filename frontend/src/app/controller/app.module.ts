@@ -10,13 +10,17 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { Home } from './pages/home';
 import { Header } from './components/header';
 import { Calendar } from './components/calendar';
+import { Event } from './pages/event';
+import { Profile } from './pages/profile';
 
 @NgModule({
   declarations: [
     AppComponent,
     Home,
     Header,
-    Calendar
+    Calendar,
+    Profile,
+    Event
   ],
   imports: [
     BrowserModule,
