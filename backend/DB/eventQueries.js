@@ -15,13 +15,15 @@ export const getEvents = async (user_id) => {
         );
 
         for (let i = 0; i < mainDataEvents.length; i++) {
-            switch (mainDataEvents[i]['tag']) {
+            let mainDataEvent = mainDataEvents[i]["dataValues"];
+
+            switch (mainDataEvent['tag']) {
                 case "exam":
                     dataEvent = await Exam.findOne
                     (
                         { where: 
                             { 
-                                event_id: mainDataEvents[i]['id']
+                                event_id: mainDataEvent['id']
                             } 
                         }
                     );
@@ -33,7 +35,7 @@ export const getEvents = async (user_id) => {
             }
 
             if (dataEvent !== null) {
-                events[i] = {...mainDataEvents[i]['dataValues'], ...dataEvent['dataValues']};
+                events[i] = {...mainDataEvent, ...dataEvent['dataValues']};
             } else {
                 return {"error": "No existen eventos para ese usuario."};
             }
@@ -46,19 +48,23 @@ export const getEvents = async (user_id) => {
     }
 }
 
-export const getEvent = async (user_id, date, time, short_desc) => {
+export const getEvent = async (user_id, startDate, startTime, endDate, endTime, short_desc) => {
     let mainDataEvent, dataEvent;
 
     try {
-        const arrDate = date.split("-");
-        const arrTime = time.split(":");
+        const arrStartDate = startDate.split("-");
+        const arrStartTime = startTime.split(":");
+        const arrEndDate = endDate.split("-");
+        const arrEndTime = endTime.split(":");
 
         mainDataEvent = await Event.findOne
         (
             { where: 
                 { 
-                    date: new Date(arrDate[0], arrDate[1]-1, arrDate[2]),
-                    time: `${arrTime[0]}:${arrTime[1]}`,
+                    startDate: new Date(arrStartDate[0], arrStartDate[1]-1, arrStartDate[2]),
+                    startTime: `${arrStartTime[0]}:${arrStartTime[1]}`,
+                    endDate: new Date(arrEndDate[0], arrEndDate[1]-1, arrEndDate[2]),
+                    endTime: `${arrEndTime[0]}:${arrEndTime[1]}`,
                     short_desc: short_desc,
                     user_id: user_id
                 } 
@@ -98,18 +104,22 @@ export const getEvent = async (user_id, date, time, short_desc) => {
     }
 }
 
-export const createEvent = async (user_id, date, time, short_desc, desc, url_img, tag, url_doc, url_attachment) => {
+export const createEvent = async (user_id, startDate, startTime, endDate, endTime, short_desc, desc, url_img, tag, url_doc, url_attachment) => {
     let mainDataEvent, dataEvent;
 
     try {
-        const arrDate = date.split("-");
-        const arrTime = time.split(":");
+        const arrStartDate = startDate.split("-");
+        const arrStartTime = startTime.split(":");
+        const arrEndDate = endDate.split("-");
+        const arrEndTime = endTime.split(":");
 
         mainDataEvent = await Event.create
         (
             { 
-                date: new Date(arrDate[0], arrDate[1]-1, arrDate[2]),
-                time: `${arrTime[0]}:${arrTime[1]}`,
+                startDate: new Date(arrStartDate[0], arrStartDate[1]-1, arrStartDate[2]),
+                startTime: `${arrStartTime[0]}:${arrStartTime[1]}`,
+                endDate: new Date(arrEndDate[0], arrEndDate[1]-1, arrEndDate[2]),
+                endTime: `${arrEndTime[0]}:${arrEndTime[1]}`,
                 short_desc: short_desc,
                 desc: desc,
                 url_img: url_img,
@@ -122,8 +132,10 @@ export const createEvent = async (user_id, date, time, short_desc, desc, url_img
         (
             { where: 
                 { 
-                    date: new Date(arrDate[0], arrDate[1]-1, arrDate[2]),
-                    time: `${arrTime[0]}:${arrTime[1]}`,
+                    startDate: new Date(arrStartDate[0], arrStartDate[1]-1, arrStartDate[2]),
+                    startTime: `${arrStartTime[0]}:${arrStartTime[1]}`,
+                    endDate: new Date(arrEndDate[0], arrEndDate[1]-1, arrEndDate[2]),
+                    endTime: `${arrEndTime[0]}:${arrEndTime[1]}`,
                     short_desc: short_desc,
                     user_id: user_id
                 } 
@@ -157,18 +169,22 @@ export const createEvent = async (user_id, date, time, short_desc, desc, url_img
     }
 }
 
-export const setEvent = async (user_id, event_id, date, time, short_desc, desc, url_img, tag, url_doc, url_attachment) => {
+export const setEvent = async (user_id, event_id, startDate, startTime, endDate, endTime, short_desc, desc, url_img, tag, url_doc, url_attachment) => {
     let mainDataEvent, dataEvent;
 
     try {
-        const arrDate = date.split("-");
-        const arrTime = time.split(":");
+        const arrStartDate = startDate.split("-");
+        const arrStartTime = startTime.split(":");
+        const arrEndDate = endDate.split("-");
+        const arrEndTime = endTime.split(":");
 
         mainDataEvent = await Event.update
         (
             { 
-                date: new Date(arrDate[0], arrDate[1]-1, arrDate[2]),
-                time: `${arrTime[0]}:${arrTime[1]}`,
+                startDate: new Date(arrStartDate[0], arrStartDate[1]-1, arrStartDate[2]),
+                startTime: `${arrStartTime[0]}:${arrStartTime[1]}`,
+                endDate: new Date(arrEndDate[0], arrEndDate[1]-1, arrEndDate[2]),
+                endTime: `${arrEndTime[0]}:${arrEndTime[1]}`,
                 short_desc: short_desc,
                 desc: desc,
                 url_img: url_img,
