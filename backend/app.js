@@ -107,8 +107,10 @@ app.post('/getEvent', async (req, res) => {
   else {
     const event = await getEvent (
       user.id,
-      req.query.date, 
-      req.query.time,
+      req.query.startDate, 
+      req.query.startTime,
+      req.query.endDate, 
+      req.query.endTime,
       req.query.short_desc
     );
 
@@ -140,8 +142,10 @@ app.post('/createEvent', async (req, res) => {
     else {
       const event = await createEvent (
         user.id,
-        req.query.date, 
-        req.query.time,
+        req.query.startDate, 
+        req.query.startTime,
+        req.query.endDate, 
+        req.query.endTime,
         req.query.short_desc,
         req.query.desc,
         req.query.url_img,
@@ -181,8 +185,10 @@ app.post('/setEvent', async (req, res) => {
       const event = await setEvent (
         user.id,
         req.query.event_id,
-        req.query.date, 
-        req.query.time,
+        req.query.startDate, 
+        req.query.startTime,
+        req.query.endDate, 
+        req.query.endTime,
         req.query.short_desc,
         req.query.desc,
         req.query.url_img,
