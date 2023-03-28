@@ -5,15 +5,26 @@
     <section class="flex flex-col align-center h-3/5 mx-auto bg-white border-t-4 border-[#fac863] rounded-lg">
       <div class="flex flex-col gap-6">
         <ul class="flex flex-col gap-4 list-disc ml-7 mt-4">
-          <li>Seleccione las fechas para crear un nuevo evento</li>
-          <li>Haga clic en un evento para editarlo</li>
+          <li class="w-[78%] mx-auto">
+            <p>
+              Haga clic en una fecha para crear un evento
+              <fa-icon [icon]="faEdit" class="ml-0.5 text-[#c89c45]"></fa-icon>
+            </p>
+          </li>
+
+          <li class="w-[78%] mx-auto">
+            <p>
+              Haga clic en un evento para poder editarlo
+              <fa-icon [icon]="faEdit" class="ml-0.5 text-[#c89c45]"></fa-icon>
+            </p>
+          </li>
         </ul>
 
         <div class="ml-8">
           <label class="cursor-pointer">
             <input
               type='checkbox'
-              [checked]='calendarOptions.weekends'
+              [checked]='!calendarOptions.weekends'
               (change)='handleWeekendsToggle()'
             />
             Alternar fines de semana
