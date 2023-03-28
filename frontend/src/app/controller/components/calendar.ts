@@ -60,11 +60,13 @@ import { Home } from '../pages/home';
     ngOnInit(): void {
       this.http.post(`http://localhost:3000/getEvents?login=${this.authUser}&password=${this.password}`, null)
       .subscribe(data => {
-        let arrDate, arrTime;
+        let arrStartDate, arrStartTime, arrEndDate, arrEndTime;
   
         for (const [i, event] of Object.entries(data)) {
-          arrDate = event['date'].split("-");
-          arrTime = event['time'].split(":");
+          arrStartDate = event['startDate'].split("-");
+          arrStartTime = event['startTime'].split(":");
+          arrEndDate = event['endDate'].split("-");
+          arrEndTime = event['endTime'].split(":");
   
           this.initialEvents.push
           (
@@ -72,7 +74,8 @@ import { Home } from '../pages/home';
               id: event['event_id'],
               title: event['short_desc'],
               desc: event['desc'],
-              start: new Date(arrDate[0], arrDate[1]-1, arrDate[2], arrTime[0], arrTime[1]),
+              start: new Date(arrStartDate[0], arrStartDate[1]-1, arrStartDate[2], arrStartTime[0], arrStartTime[1]),
+              end: new Date(arrEndDate[0], arrEndDate[1]-1, arrEndDate[2], arrEndTime[0], arrEndTime[1]),
               url_img: event['url_img'],
               tag: event['tag'],
               user_id: event['user_id'],
@@ -95,6 +98,7 @@ import { Home } from '../pages/home';
   
       for (let i = 0; i < this.initialEvents.length; i++) {
         if (this.initialEvents[i].start?.toString() !== events[i].start?.toString()) change = true;
+        if (this.initialEvents[i].end?.toString() !== events[i].end?.toString()) change = true;
         if (this.initialEvents[i].title !== events[i].title) change = true;
         if (this.initialEvents[i]['desc'] !== events[i].extendedProps['desc']) change = true;
         if (this.initialEvents[i]['url_img'] !== events[i].extendedProps['url_img']) change = true;
@@ -105,11 +109,13 @@ import { Home } from '../pages/home';
   
       if (change) {
         events.forEach(event => {
-          if (event.start?.getMonth !== undefined) {
-            let date = `${event.start.getFullYear()}-${event.start.getMonth()+1}-${event.start.getDate()}`;
-            let time = `${event.start?.getHours()}:${event.start?.getMinutes()}`;
+          if (event.start !== null && event.end !== null) {
+            let startDate = `${event.start.getFullYear()}-${event.start.getMonth()+1}-${event.start.getDate()}`;
+            let startTime = `${event.start.getHours()}:${event.start.getMinutes()}`;
+            let endDate = `${event.end.getFullYear()}-${event.end.getMonth()+1}-${event.end.getDate()}`;
+            let endTime = `${event.end.getHours()}:${event.end.getMinutes()}`;
   
-            this.http.post(`http://localhost:3000/setEvent?login=${this.authUser}&password=${this.password}&event_id=${event.id}&date=${date}&time=${time}&short_desc=${event.title}&desc=${event.extendedProps['desc']}&url_img=${event.extendedProps['url_img']}&tag=${event.extendedProps['tag']}&url_doc=${event.extendedProps['url_doc']}&url_attachment=${event.extendedProps['url_attachment']}`, null)
+            this.http.post(`http://localhost:3000/setEvent?login=${this.authUser}&password=${this.password}&event_id=${event.id}&startDate=${startDate}&startTime=${startTime}&endDate=${endDate}&endTime=${endTime}&short_desc=${event.title}&desc=${event.extendedProps['desc']}&url_img=${event.extendedProps['url_img']}&tag=${event.extendedProps['tag']}&url_doc=${event.extendedProps['url_doc']}&url_attachment=${event.extendedProps['url_attachment']}`, null)
               .subscribe(data => {
                 console.log(data);
             });
@@ -127,8 +133,10 @@ import { Home } from '../pages/home';
       if (confirm(`¿Quieres crear un evento nuevo?`)) {
         const startDate = `${selectInfo.start.getFullYear()}-${selectInfo.start.getMonth()+1}-${selectInfo.start.getDate()}`;
         const startTime = `${selectInfo.start.getHours()}:${selectInfo.start.getMinutes()}`;
+        const endDate = `${selectInfo.end.getFullYear()}-${selectInfo.end.getMonth()+1}-${selectInfo.end.getDate()}`;
+        const endTime = `${selectInfo.end.getHours()}:${selectInfo.end.getMinutes()}`;
 
-        window.location.href = `addEvent/${startDate}&${startTime}`;
+        window.location.href = `addEvent/${startDate}&${startTime}_${endDate}&${endTime}`;
       }
       // const title = prompt('Please enter a new title for your event');
       // const calendarApi = selectInfo.view.calendar;
@@ -148,12 +156,14 @@ import { Home } from '../pages/home';
   
     handleEventClick(clickInfo: EventClickArg) {
       if (confirm(`¿Quieres editar el evento '${clickInfo.event.title}'?`)) {
-        if (clickInfo.event.start?.getMonth !== undefined) {
+        if (clickInfo.event.start !== null && clickInfo.event.end !== null) {
           const startDate = `${clickInfo.event.start.getFullYear()}-${clickInfo.event.start.getMonth()+1}-${clickInfo.event.start.getDate()}`;
           const startTime = `${clickInfo.event.start.getHours()}:${clickInfo.event.start.getMinutes()}`;
+          const endDate = `${clickInfo.event.end.getFullYear()}-${clickInfo.event.end.getMonth()+1}-${clickInfo.event.end.getDate()}`;
+          const endTime = `${clickInfo.event.end.getHours()}:${clickInfo.event.end.getMinutes()}`;
         
           window.location.href = 
-          `editEvent/${clickInfo.event.title}/${startDate}&${startTime}/`;
+          `editEvent/${clickInfo.event.title}/${startDate}&${startTime}_${endDate}&${endTime}`;
         }
       }
       // if (confirm(`Are you sure you want to delete the event '${clickInfo.event.title}'`)) {
