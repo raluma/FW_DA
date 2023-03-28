@@ -14,7 +14,11 @@ const routes: Routes = [
     component: Profile
   },
   {
-    path: 'event',
+    path: 'addEvent/:datetime',
+    component: Event
+  },
+  {
+    path: 'editEvent/:short_desc/:datetime',
     component: Event
   }
 ];
