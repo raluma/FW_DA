@@ -1,20 +1,45 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, Renderer2, ViewChild } from '@angular/core';
 import { Home } from '../pages/home';
 import { FormControl, FormGroup } from '@angular/forms';
-import { faUser, faRightToBracket } from '@fortawesome/free-solid-svg-icons';
+import { faUser, faRightToBracket, faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'header',
     templateUrl: '../../view/components/header.html'
   })
   export class Header extends Home {
+    @ViewChild("password") password: ElementRef | undefined;
+
+    constructor(private renderer: Renderer2) { super();}
+
     faUser = faUser;
     faRightToBracket = faRightToBracket;
+    faEye = faEye;
+    faEyeSlash = faEyeSlash;
 
     modalStage = false;
+    modalLogin = true;
+    passwordStage = false;
+   
 
     toggleModal() {
       this.modalStage = !this.modalStage;
+    }
+
+    toggleAuth() {
+      this.modalLogin = !this.modalLogin;
+    }
+
+    togglePassword() {
+      this.passwordStage = !this.passwordStage;
+
+      if (this.password?.nativeElement.type === 'password') {
+        this.renderer.setAttribute(this.password?.nativeElement, "type", "text");
+      } else {
+        this.renderer.setAttribute(this.password?.nativeElement, "type", "password");
+      }
+
+      this.password?.nativeElement.focus();
     }
 
     loginForm = new FormGroup(
