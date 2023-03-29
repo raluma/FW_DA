@@ -2,20 +2,20 @@
   <article class="flex flex-col gap-6 items-center w-4/5 h-full">
     <h1 class="text-4xl font-bold pr-4">Opciones</h1>
 
-    <section class="flex flex-col align-center h-3/5 mx-auto bg-white border-t-4 border-[#fac863] rounded-lg">
+    <section class="flex flex-col align-center mx-auto bg-white border-t-4 border-[#fac863] rounded-lg">
       <div class="flex flex-col gap-6">
         <ul class="flex flex-col gap-4 list-disc ml-7 mt-4">
           <li class="w-[78%] mx-auto">
             <p>
               Haga clic en una fecha para crear un evento
-              <fa-icon [icon]="faEdit" class="ml-0.5 text-[#c89c45]"></fa-icon>
+              <fa-icon [icon]="faCalendar" class="ml-0.5 text-[#c89c45] hover:text-[#dfb054]" title="Crear"></fa-icon>
             </p>
           </li>
 
           <li class="w-[78%] mx-auto">
             <p>
               Haga clic en un evento para poder editarlo
-              <fa-icon [icon]="faEdit" class="ml-0.5 text-[#c89c45]"></fa-icon>
+              <fa-icon [icon]="faEdit" class="ml-0.5 text-[#c89c45] hover:text-[#dfb054]" title="Editar"></fa-icon>
             </p>
           </li>
         </ul>
@@ -51,15 +51,8 @@
   <article class="border-t-4 border-[#fac863] bg-white pb-8">
     <full-calendar class="mt-4 px-10" *ngIf='calendarVisible' [options]='calendarOptions'>
         <ng-template #eventContent let-arg>
-          <article class="flex flex-row items-center ml-2">
-              <section class="flex flex-row gap-1 items-center">
-                <fa-icon [icon]="faCalendar"></fa-icon>
-                <p *ngIf='arg.event.start.getHours() !== 0'>
-                  {{ showTimes(arg.event.start) }}
-                </p>
-              </section>
-
-              <b class="m-2">{{ arg.event.title }}</b>
+          <article class="flex flex-row flex-wrap items-center ml-1"> 
+              <b>{{ formatForEvent(arg.event.title) }}</b>
           </article>
       </ng-template>
     </full-calendar>

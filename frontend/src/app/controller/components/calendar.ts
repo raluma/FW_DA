@@ -49,14 +49,6 @@ import { Home } from '../pages/home';
       eventsSet: this.handleEvents.bind(this)
     };
   
-    showTimes(times : Date) {
-      if (times.getMinutes() !== 0) {
-        return `${times.getHours()}:${times.getMinutes()}h`;
-      } else {
-        return `${times.getHours()}h`;
-      }
-    }
-  
     ngOnInit(): void {
       this.http.post(`http://localhost:3000/getEvents?login=${this.authUser}&password=${this.password}`, null)
       .subscribe(data => {
@@ -88,6 +80,10 @@ import { Home } from '../pages/home';
 
         this.calendarVisible = true;
       });
+    }
+
+    formatForEvent(str: string) {
+      return str[0].toUpperCase() + str.slice(1, str.length);
     }
   
     constructor(private changeDetector: ChangeDetectorRef) { super(); }
