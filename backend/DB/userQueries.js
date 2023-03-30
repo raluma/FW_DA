@@ -27,7 +27,7 @@ export const getUser = async (login, password) => {
         if (loginWithUsername !== null) { return loginWithUsername; } 
         else if (loginWithEmail !== null) { return loginWithEmail; } 
         else { 
-            return {"error": "No existe ningún usuario con ese nombre de usuario o email."};
+            return {"error": "Los datos no son válidos. No exise este usuario."};
         } 
 
     } catch (err) {
@@ -39,9 +39,12 @@ export const createUser = async (username, email, password) => {
     let singup;
     
         try {
-            if (!email.includes('@')) {
-                return {"error": "El email debe contener @"};
-            } else {
+            if ((!String(email).toLowerCase().match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/))) {
+                return {"error": "El email no es válido."};
+            } else if (!String(username).match(/^[a-zA-Z0-9]+$/)) {
+                return {"error": "El username no es válido."};
+            }
+            else {
                 singup = await User.create
                 (
                     {
