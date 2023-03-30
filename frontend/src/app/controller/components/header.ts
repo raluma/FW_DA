@@ -8,9 +8,7 @@ import { faUser, faRightToBracket, faEye, faEyeSlash } from '@fortawesome/free-s
     templateUrl: '../../view/components/header.html'
   })
   export class Header extends Home {
-    @ViewChild("password") password: ElementRef | undefined;
-
-    constructor(private renderer: Renderer2) { super();}
+    constructor(private renderer: Renderer2) { super(); }
 
     faUser = faUser;
     faRightToBracket = faRightToBracket;
@@ -18,9 +16,6 @@ import { faUser, faRightToBracket, faEye, faEyeSlash } from '@fortawesome/free-s
     faEyeSlash = faEyeSlash;
 
     modalStage = false;
-    modalLogin = true;
-    passwordStage = false;
-   
 
     toggleModal() {
       this.modalStage = !this.modalStage;
@@ -30,16 +25,20 @@ import { faUser, faRightToBracket, faEye, faEyeSlash } from '@fortawesome/free-s
       this.modalLogin = !this.modalLogin;
     }
 
-    togglePassword() {
-      this.passwordStage = !this.passwordStage;
+    modalLogin = true;
 
-      if (this.password?.nativeElement.type === 'password') {
-        this.renderer.setAttribute(this.password?.nativeElement, "type", "text");
+    @ViewChild("loginPassword") loginPassword: ElementRef | undefined;
+    loginPasswordStage = false;
+
+    toggleLoginPassword() {
+      this.loginPassword?.nativeElement.focus();
+      this.loginPasswordStage = !this.loginPasswordStage;
+
+      if (this.loginPassword?.nativeElement.type === 'password') {
+        this.renderer.setAttribute(this.loginPassword?.nativeElement, "type", "text");
       } else {
-        this.renderer.setAttribute(this.password?.nativeElement, "type", "password");
+        this.renderer.setAttribute(this.loginPassword?.nativeElement, "type", "password");
       }
-
-      this.password?.nativeElement.focus();
     }
 
     loginForm = new FormGroup(
@@ -55,10 +54,14 @@ import { faUser, faRightToBracket, faEye, faEyeSlash } from '@fortawesome/free-s
       const { authUser, password} = this.loginForm.value;
   
       this.http.post(`http://localhost:3000/login?login=${authUser}&password=${password}`, null)
-        .subscribe(() => {
-          localStorage.setItem("authUser", authUser);
-          localStorage.setItem("password", password);
-          this.toggleModal();
+        .subscribe((obj : any) => {
+          if (obj instanceof Object && obj['error'] !== undefined) {
+            alert(obj['error']);
+          } else {
+            localStorage.setItem("authUser", authUser);
+            localStorage.setItem("password", password);
+            this.toggleModal();
+          }
       });
     }
 
@@ -66,4 +69,62 @@ import { faUser, faRightToBracket, faEye, faEyeSlash } from '@fortawesome/free-s
       localStorage.removeItem("authUser");
       localStorage.removeItem("password");
     }
+
+    @ViewChild("signUpPassword1") signUpPassword1: ElementRef | undefined;
+    @ViewChild("signUpPassword2") signUpPassword2: ElementRef | undefined;
+    signUpPassword1Stage = false;
+    signUpPassword2Stage = false;
+
+    toggleSignUpPassword1() {
+      this.signUpPassword1?.nativeElement.focus();
+      this.signUpPassword1Stage = !this.signUpPassword1Stage;
+
+      if (this.signUpPassword1?.nativeElement.type === 'password') {
+        this.renderer.setAttribute(this.signUpPassword1?.nativeElement, "type", "text");
+      } else {
+        this.renderer.setAttribute(this.signUpPassword1?.nativeElement, "type", "password");
+      }
+    }
+
+    toggleSignUpPassword2() {
+      this.signUpPassword2?.nativeElement.focus();
+      this.signUpPassword2Stage = !this.signUpPassword2Stage;
+
+      if (this.signUpPassword2?.nativeElement.type === 'password') {
+        this.renderer.setAttribute(this.signUpPassword2?.nativeElement, "type", "text");
+      } else {
+        this.renderer.setAttribute(this.signUpPassword2?.nativeElement, "type", "password");
+      }
+    }
+
+    signUpForm = new FormGroup(
+      {
+          email: new FormControl(),
+          username: new FormControl(),
+          password1: new FormControl(),
+          password2: new FormControl()
+      }
+    );
+
+    signUp(e: Event) {
+      e.preventDefault();
+      
+      const { email, username, password1, password2 } = this.signUpForm.value;
+
+      if (!String(email).toLowerCase().match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/)) {
+        alert("El email no es válido.");
+      }
+      else if (!String(username).match(/^[a-zA-Z0-9]+$/)) {
+        alert("El nombre de usuario no es válido.");
+      }
+      else if (password1 !== password2) {
+        alert("Las contraseñas no coinciden.");
+      }
+      else {
+        this.http.post(`http://localhost:3000/signup?email=${email}&username=${username}&password=${password1}`, null)
+          .subscribe(() => {
+            this.toggleModal();
+        });
+      }
+    }   
   }
