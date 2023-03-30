@@ -27,11 +27,7 @@ app.post('/login', async (req, res) => {
     req.query.password
   );
 
-  if (existError(user)) {
-    res.status(404).send(user);
-  } else {
-    res.status(200).send(user);
-  }
+  res.status(200).send(user);
 })
 
 app.post('/signup', async (req, res) => {
