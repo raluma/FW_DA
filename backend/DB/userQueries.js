@@ -65,9 +65,11 @@ export const createUser = async (username, email, password) => {
 export const setUser = async (login, username, email, password) => {
     let singupUsername, sigupEmail;
 
-    if (!email.includes('@')) {
-        return {"error": "El email debe contener @"};
-    } 
+    if ((!String(email).toLowerCase().match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/))) {
+        return {"error": "El email no es válido."};
+    } else if (!String(username).match(/^[a-zA-Z0-9]+$/)) {
+        return {"error": "El username no es válido."};
+    }
     else {
         try {
             singupUsername = await User.update
