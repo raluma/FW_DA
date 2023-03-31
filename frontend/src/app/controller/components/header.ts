@@ -51,7 +51,7 @@ import { faUser, faRightToBracket, faEye, faEyeSlash } from '@fortawesome/free-s
     login(e: Event) {
       e.preventDefault();
       
-      const { authUser, password} = this.loginForm.value;
+      const { authUser, password } = this.loginForm.value;
   
       this.http.post(`http://localhost:3000/login?login=${authUser}&password=${password}`, null)
         .subscribe((obj : any) => {
@@ -68,6 +68,8 @@ import { faUser, faRightToBracket, faEye, faEyeSlash } from '@fortawesome/free-s
     logout() {
       localStorage.removeItem("authUser");
       localStorage.removeItem("password");
+      
+      window.location.href = "/";
     }
 
     @ViewChild("signUpPassword1") signUpPassword1: ElementRef | undefined;
