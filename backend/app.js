@@ -47,9 +47,10 @@ app.post('/signup', async (req, res) => {
 app.post('/setUser', async (req, res) => {
   const user = await setUser (
     req.query.login,
+    req.query.password,
     req.query.username, 
     req.query.email,
-    req.query.password
+    req.query.newPassword
   );
 
   if (existError(user)) {
@@ -62,6 +63,7 @@ app.post('/setUser', async (req, res) => {
 app.post('/dropUser', async (req, res) => {
   const user = await dropUser (
     req.query.login,
+    req.query.password
   );
 
   if (existError(user)) {
