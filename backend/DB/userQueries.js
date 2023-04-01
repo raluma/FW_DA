@@ -62,7 +62,7 @@ export const createUser = async (username, email, password) => {
         }
 }
 
-export const setUser = async (login, username, email, password) => {
+export const setUser = async (login, password, username, email, newPassword) => {
     let singupUsername, sigupEmail;
 
     if ((!String(email).toLowerCase().match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/))) {
@@ -77,11 +77,12 @@ export const setUser = async (login, username, email, password) => {
                 {
                     username: username,
                     email: email,
-                    password: password
+                    password: newPassword
                 },
                 { where : 
                     {
-                        username: login
+                        username: login,
+                        password: password
                     }
                 }
             );
@@ -91,16 +92,17 @@ export const setUser = async (login, username, email, password) => {
                 {
                     username: username,
                     email: email,
-                    password: password
+                    password: newPassword
                 },
                 { where : 
                     {
-                        email: login
+                        email: login,
+                        password: password
                     }
                 }
             );
 
-            if (singupUsername !== null || sigupEmail !== null) { return {"exito": "Se ha actualizado con éxito"}; } 
+            if (singupUsername !== null || sigupEmail !== null) { return {"exito": "El usuario se ha actualizado con éxito"}; } 
 
         } catch (err) {
             return {"error": "No se han enviado los parámetros necesarios."};
@@ -108,7 +110,7 @@ export const setUser = async (login, username, email, password) => {
     }
 }
 
-export const dropUser = async (login) => {
+export const dropUser = async (login, password) => {
     let dropByUsername, dropByEmail;
 
     try {
@@ -116,7 +118,8 @@ export const dropUser = async (login) => {
         (
             { where : 
                 {
-                    username: login
+                    username: login,
+                    password: password
                 }
             }
         );
@@ -125,7 +128,8 @@ export const dropUser = async (login) => {
         (
             { where : 
                 {
-                    email: login
+                    email: login,
+                    password: password
                 }
             }
         );
