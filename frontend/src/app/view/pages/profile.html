@@ -1,39 +1,41 @@
-<header class="flex flex-row justify-end items-center w-full h-16 bg-black"></header>
+<ng-container *ngIf="isLoged()">
+    <header class="flex flex-row justify-end items-center w-full h-16 bg-black"></header>
 
-<form class="flex flex-col items-center w-full mt-10" [formGroup]="updateUserForm" (ngSubmit)="updateUser($event)">
-    <div class="relative mr-32 mb-3 w-3/5 h-10" data-te-input-wrapper-init>
-        <input type="email" class="peer block min-h-[auto] w-full rounded border py-[0.32rem] px-3 leading-[1.6] outline-none"
-            formControlName="email" name="email"
-            #userEmail placeholder="Correo Electrónico" />
+    <form class="flex flex-col items-center w-full mt-10" [formGroup]="updateUserForm" (ngSubmit)="updateUser($event)">
+        <div class="relative mr-32 mb-3 w-3/5 h-10" data-te-input-wrapper-init>
+            <input type="email" class="peer block min-h-[auto] w-full rounded border py-[0.32rem] px-3 leading-[1.6] outline-none"
+                formControlName="email" name="email"
+                #userEmail placeholder="Correo Electrónico" />
 
-        <label for="email" class="pointer-events-none absolute top-0 left-3 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[1.6] text-neutral-500 -translate-y-[0.9rem] scale-[0.8] text-primary peer-data-[te-input-state-active]:-translate-y-[0.9rem] peer-data-[te-input-state-active]:scale-[0.8] motion-reduce:transition-none">
-            Correo Electrónico
-        </label>
-    </div>
+            <label for="email" class="pointer-events-none absolute top-0 left-3 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[1.6] text-neutral-500 -translate-y-[0.9rem] scale-[0.8] text-primary peer-data-[te-input-state-active]:-translate-y-[0.9rem] peer-data-[te-input-state-active]:scale-[0.8] motion-reduce:transition-none">
+                Correo Electrónico
+            </label>
+        </div>
 
-    <div class="relative mr-32 mb-3 w-3/5 h-10" data-te-input-wrapper-init>
-        <input type="text" class="peer block min-h-[auto] w-full rounded border py-[0.32rem] px-3 leading-[1.6] outline-none"
-            formControlName="username" name="username"
-            #userName placeholder="Nombre de Usuario" />
+        <div class="relative mr-32 mb-3 w-3/5 h-10" data-te-input-wrapper-init>
+            <input type="text" class="peer block min-h-[auto] w-full rounded border py-[0.32rem] px-3 leading-[1.6] outline-none"
+                formControlName="username" name="username"
+                #userName placeholder="Nombre de Usuario" />
 
-        <label for="username" class="pointer-events-none absolute top-0 left-3 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[1.6] text-neutral-500 -translate-y-[0.9rem] scale-[0.8] text-primary peer-data-[te-input-state-active]:-translate-y-[0.9rem] peer-data-[te-input-state-active]:scale-[0.8] motion-reduce:transition-none">
-            Nombre de Usuario
-        </label>
-    </div>
+            <label for="username" class="pointer-events-none absolute top-0 left-3 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[1.6] text-neutral-500 -translate-y-[0.9rem] scale-[0.8] text-primary peer-data-[te-input-state-active]:-translate-y-[0.9rem] peer-data-[te-input-state-active]:scale-[0.8] motion-reduce:transition-none">
+                Nombre de Usuario
+            </label>
+        </div>
 
-    <div class="relative mr-32 mb-3 w-3/5 h-10" data-te-input-wrapper-init>
-        <input type="text" class="peer block min-h-[auto] w-full rounded border py-[0.32rem] px-3 leading-[1.6] outline-none" 
-            formControlName="password" name="password" 
-            #userPassword placeholder="Contraseña" />
+        <div class="relative mr-32 mb-3 w-3/5 h-10" data-te-input-wrapper-init>
+            <input type="text" class="peer block min-h-[auto] w-full rounded border py-[0.32rem] px-3 leading-[1.6] outline-none" 
+                formControlName="password" name="password" 
+                #userPassword placeholder="Contraseña" />
 
-        <label for="password" class="pointer-events-none absolute top-0 left-3 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[1.6] text-neutral-500 -translate-y-[0.9rem] scale-[0.8] text-primary peer-data-[te-input-state-active]:-translate-y-[0.9rem] peer-data-[te-input-state-active]:scale-[0.8] motion-reduce:transition-none">
-            Contraseña
-        </label>
-    </div>
+            <label for="password" class="pointer-events-none absolute top-0 left-3 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[1.6] text-neutral-500 -translate-y-[0.9rem] scale-[0.8] text-primary peer-data-[te-input-state-active]:-translate-y-[0.9rem] peer-data-[te-input-state-active]:scale-[0.8] motion-reduce:transition-none">
+                Contraseña
+            </label>
+        </div>
 
-    <div class="flex items-center gap-24 w-full py-6 border-t border-solid border-slate-200 rounded-b">
-        <button type="submit" class="bg-gray-500 text-white active:bg-gray-600 font-bold uppercase text-sm w-32 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150 ml-20">
-            Registro
-        </button>
-    </div>
-</form>
+        <div class="flex items-center gap-24 w-full py-6 border-t border-solid border-slate-200 rounded-b">
+            <button type="submit" class="bg-gray-500 text-white active:bg-gray-600 font-bold uppercase text-sm w-32 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150 ml-20">
+                Registro
+            </button>
+        </div>
+    </form>
+</ng-container>
