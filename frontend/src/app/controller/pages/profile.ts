@@ -29,6 +29,7 @@ export class Profile extends AppComponent {
     .subscribe((obj : any) => {
       if (obj instanceof Object && obj['error'] !== undefined) {
         alert(obj['error']);
+        window.location.href = "/";
       } else {
         this.user = obj;
         this.renderer.setProperty(this.userEmail?.nativeElement, "value", this.user.email);
