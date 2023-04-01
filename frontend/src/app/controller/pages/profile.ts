@@ -50,6 +50,11 @@ export class Profile extends AppComponent {
   updateUser(e: Event) {
     e.preventDefault();
 
+    const { email, username, password } = this.updateUserForm.value;
+
+    if (email !== null || username !== null || password !== null) {
+      console.log(email, username, password);
+    }
   }
 }
 
