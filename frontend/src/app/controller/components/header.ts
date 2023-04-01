@@ -20,8 +20,8 @@ import { AppComponent } from '../app.component';
 
     ngOnInit() {
       setTimeout(() => {
-        if (!this.isLoged()) this.toggleModal()
-      }, 3000)
+        if (!this.modalStage) this.toggleModal()
+      }, 5000)
     }
 
     toggleModal() {
