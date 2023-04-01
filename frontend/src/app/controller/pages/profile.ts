@@ -14,9 +14,6 @@ export class Profile extends AppComponent {
   @ViewChild("userName") userName: ElementRef | undefined;
   @ViewChild("userPassword") userPassword: ElementRef | undefined;
 
-  authUser = localStorage.getItem("authUser");
-  password = localStorage.getItem("password");
-
   user : User = {
     username: '',
     password: '',
@@ -25,7 +22,10 @@ export class Profile extends AppComponent {
   };
 
   ngOnInit(): void {
-    this.http.post(`http://localhost:3000/login?login=${this.authUser}&password=${this.password}`, null)
+    const authUser = localStorage.getItem("authUser");
+    const password = localStorage.getItem("password");
+
+    this.http.post(`http://localhost:3000/login?login=${authUser}&password=${password}`, null)
     .subscribe((obj : any) => {
       if (obj instanceof Object && obj['error'] !== undefined) {
         alert(obj['error']);
@@ -41,19 +41,35 @@ export class Profile extends AppComponent {
 
   updateUserForm = new FormGroup(
     {
-        email: new FormControl(),
-        username: new FormControl(),
-        password: new FormControl()
+        newUsername: new FormControl(),
+        newEmail: new FormControl(),
+        newPassword: new FormControl()
     }
   )
 
   updateUser(e: Event) {
     e.preventDefault();
 
-    const { email, username, password } = this.updateUserForm.value;
+    const authUser = localStorage.getItem("authUser");
+    const password = localStorage.getItem("password");
 
-    if (email !== null || username !== null || password !== null) {
-      console.log(email, username, password);
+    let { newUsername, newEmail, newPassword } = this.updateUserForm.value;
+
+    if (newUsername === null) newUsername = this.user.username;
+    if (newEmail === null) newEmail = this.user.email;
+    if (newPassword === null) newPassword = this.user.password;
+
+    if (newEmail !== null || newUsername !== null || newPassword !== null) {
+      this.http.post(`http://localhost:3000/setUser?login=${authUser}&password=${password}&username=${newUsername}&email=${newEmail}&newPassword=${newPassword}`, null)
+        .subscribe((obj : any) => {
+          if (obj instanceof Object && obj['error'] !== undefined) {
+            alert(obj['error']);
+          } else {
+            localStorage.setItem("authUser", newUsername);
+            localStorage.setItem("password", newPassword);
+            alert(obj["exito"]);
+          }
+      });
     }
   }
 }
