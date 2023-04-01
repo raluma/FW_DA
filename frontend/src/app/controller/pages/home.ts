@@ -5,11 +5,7 @@ import { AppComponent } from '../app.component';
   selector: 'home',
   templateUrl: '../../view/pages/home.html'
 })
-export class Home extends AppComponent { 
-  showProfile() {
-    window.location.href = 'profile';
-  }
-}
+export class Home extends AppComponent {}
 
 
  
