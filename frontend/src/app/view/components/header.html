@@ -1,13 +1,20 @@
 <section class="mr-8">
-    <button type="button" class="rounded-md bg-slate-600 mx-2 px-4 h-10 hover:bg-slate-700 active:scale-95"
-        (click)="isLoged() ? showProfile() : toggleModal()">
-        <fa-icon class="text-white" [icon]="faUser"></fa-icon>
-    </button>
-
     <ng-container *ngIf="isLoged()">
+        <button type="button" class="rounded-md bg-slate-600 mx-2 px-4 h-10 hover:bg-slate-700 active:scale-95"
+        (click)="areInHome() ? goToProfile() : goToHome()">
+            <fa-icon class="text-white" [icon]="areInHome() ? faUser : faHome"></fa-icon>
+        </button>
+
         <button type="button" class="rounded-md bg-slate-600 mx-2 px-4 h-10 hover:bg-slate-700 active:scale-95"
             (click)="logout()">
             <fa-icon class="text-white" [icon]="faRightToBracket"></fa-icon>
+        </button>
+    </ng-container>
+
+    <ng-container *ngIf="!isLoged()">
+        <button type="button" class="rounded-md bg-slate-600 mx-2 px-4 h-10 hover:bg-slate-700 active:scale-95"
+            (click)="toggleModal()">
+            <fa-icon class="text-white" [icon]="faUser"></fa-icon>
         </button>
     </ng-container>
 </section>
