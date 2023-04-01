@@ -1,21 +1,28 @@
 import { Component, ElementRef, Renderer2, ViewChild } from '@angular/core';
-import { Home } from '../pages/home';
 import { FormControl, FormGroup } from '@angular/forms';
-import { faUser, faRightToBracket, faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+import { faUser, faRightToBracket, faEye, faEyeSlash, faHome } from '@fortawesome/free-solid-svg-icons';
+import { AppComponent } from '../app.component';
 
 @Component({
     selector: 'header',
     templateUrl: '../../view/components/header.html'
   })
-  export class Header extends Home {
+  export class Header extends AppComponent {
     constructor(private renderer: Renderer2) { super(); }
 
     faUser = faUser;
+    faHome = faHome;
     faRightToBracket = faRightToBracket;
     faEye = faEye;
     faEyeSlash = faEyeSlash;
 
     modalStage = false;
+
+    ngOnInit() {
+      setTimeout(() => {
+        if (!this.isLoged()) this.toggleModal()
+      }, 3000)
+    }
 
     toggleModal() {
       this.modalStage = !this.modalStage;
@@ -128,5 +135,17 @@ import { faUser, faRightToBracket, faEye, faEyeSlash } from '@fortawesome/free-s
             this.toggleModal();
         });
       }
-    }   
+    }
+
+    areInHome() {
+      return window.location.pathname === "/";
+    }
+
+    goToHome() {
+      window.location.href = '/';
+    }
+    
+    goToProfile() {
+      window.location.href = '/profile';
+    }
   }
