@@ -20,12 +20,12 @@ import { faUser, faRightToBracket, faEye, faEyeSlash } from '@fortawesome/free-s
     toggleModal() {
       this.modalStage = !this.modalStage;
     }
+    
+    modalLogin = true;
 
     toggleAuth() {
       this.modalLogin = !this.modalLogin;
     }
-
-    modalLogin = true;
 
     @ViewChild("loginPassword") loginPassword: ElementRef | undefined;
     loginPasswordStage = false;
