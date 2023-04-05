@@ -132,7 +132,7 @@ import { Home } from '../pages/home';
         const endDate = `${selectInfo.end.getFullYear()}-${selectInfo.end.getMonth()+1}-${selectInfo.end.getDate()}`;
         const endTime = `${selectInfo.end.getHours()}:${selectInfo.end.getMinutes()}`;
 
-        window.location.href = `addEvent/${startDate}&${startTime}_${endDate}&${endTime}`;
+        window.location.href = `event/add/${startDate}&${startTime}_${endDate}&${endTime}`;
       }
       // const title = prompt('Please enter a new title for your event');
       // const calendarApi = selectInfo.view.calendar;
@@ -159,7 +159,7 @@ import { Home } from '../pages/home';
           const endTime = `${clickInfo.event.end.getHours()}:${clickInfo.event.end.getMinutes()}`;
         
           window.location.href = 
-          `editEvent/${clickInfo.event.title}/${startDate}&${startTime}_${endDate}&${endTime}`;
+          `event/edit/${clickInfo.event.title}/${startDate}&${startTime}_${endDate}&${endTime}`;
         }
       }
       // if (confirm(`Are you sure you want to delete the event '${clickInfo.event.title}'`)) {
