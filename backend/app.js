@@ -3,13 +3,23 @@ import cors from 'cors';
 import * as dotenv from 'dotenv';
 import { getUser, createUser, setUser, dropUser } from './DB/userQueries.js';
 import { 
-  getEvents, getEvent, dropEvent, setDateEvent, createExamEvent, setExamEvent,
-  createWorkEvent, setWorkEvent, createLeisureEvent, setLeisureEvent,
-  createAppointmentEvent, setAppointmentEvent 
+  getEvents, getEvent, getTags, getTag, createTag, dropEvent, setDateEvent, 
+  createExamEvent, setExamEvent, createWorkEvent, setWorkEvent, 
+  createLeisureEvent, setLeisureEvent, createAppointmentEvent, setAppointmentEvent, 
 } from './DB/eventQueries.js';
 
 dotenv.config();
 const app = express();
+
+createUser("Ralu", "ralu@gmail.com", "1234");
+createExamEvent(1, "2023-04-06", "0:0", "2023-04-07", "0:0", "Examen", null, null, null, null);
+createWorkEvent(1, "2023-04-06", "0:0", "2023-04-07", "0:0", "Trabajo", null, null, null, null, null);
+createLeisureEvent(1, "2023-04-06", "0:0", "2023-04-07", "0:0", "Ocio", null, null, null);
+createAppointmentEvent(1, "2023-04-06", "0:0", "2023-04-07", "0:0", "Cita", null, null, null, null);
+createTag("exam", "dodgerBlue", "Examen");
+createTag("work", "orange", "Trabajo");
+createTag("leisure", "violet", "Ocio");
+createTag("appointment", "green", "Cita");
 
 const { PORT, AUTH_WEB } = process.env;
 
@@ -23,6 +33,30 @@ const existError = (obj) => {
 
 app.get('/', async (req, res) => {
   res.status(200).send("testing API");
+})
+
+app.get('/getTags', async (req, res) => {
+  const tags = await getTags();
+
+  if (existError(tags)) {
+    res.status(404).send(tags);
+  } 
+  else {
+    res.status(200).send(tags);
+  }
+})
+
+app.get('/getTag', async (req, res) => {
+  const tag = await getTag ( 
+    req.query.tagName
+  );
+
+  if (existError(tag)) {
+    res.status(404).send(tag);
+  } 
+  else {
+    res.status(200).send(tag)
+  }
 })
 
 app.post('/login', async (req, res) => {
