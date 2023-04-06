@@ -1,13 +1,41 @@
 <header class="flex flex-row justify-end items-center w-full h-16 bg-black"></header>
 
 <article class="flex flex-col items-center justify-center h-[92.3vh]">
-    <section class="flex flex-row flex-wrap justify-center items-start w-3/4 rounded-lg">
+    <section class="flex flex-row flex-wrap justify-center items-start w-3/4 border border-[#fac863] rounded-lg">
         <div class="flex flex-row justify-start items-center w-full h-14 bg-[#fac863] rounded-t-lg">
             <fa-icon [icon]="this.action === 'add' ? faCalendar : faEdit" class="ml-6 text-2xl text-orange-700" title="Crear"></fa-icon>
         </div>
 
-        <div>
-            <p>testing</p>
+        <div class="flex flex-row flex-wrap justify-around w-full m-4">
+            <form action="" class="flex flex-row flex-wrap gap-y-2 w-full my-6">
+                <div class="flex flex-row flex-wrap justify-around w-full">
+                    <div class="flex flex-col justify-center items-center w-1/3">
+                        <img src="" alt="" class="w-48 h-48">
+                    </div>
+
+                    <div class="flex flex-col gap-6 items-center w-1/3 pt-16">
+                        <label for="">Fecha Inicial: </label>
+                        <input type="datetime-local" name="" id="" value="" class="w-56 border border-black">
+                    </div>
+
+                    <div class="flex flex-col gap-6 items-center w-1/3 pt-16">
+                        <label for="">Fecha Final: </label>
+                        <input type="datetime-local" name="" id="" value="" class="w-56 border border-black">
+                    </div>
+                </div>
+
+                <div class="flex flex-row flex-wrap justify-around w-full">
+                    <div class="flex flex-col justify-center gap-6 items-center w-[40%] pt-16">
+                        <label for="">Descripción corta: </label>
+                        <input type="text" class="border border-black w-[80%]">
+                    </div>
+
+                    <div class="flex flex-col gap-4 items-center w-[60%] pt-10">
+                        <label for="">Descripción: </label>
+                        <textarea name="" id="" cols="64" rows="4" class="border border-black resize-none"></textarea>
+                    </div>
+                </div>
+            </form>
         </div>
     </section>
 </article>
