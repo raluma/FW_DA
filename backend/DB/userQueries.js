@@ -31,7 +31,7 @@ export const getUser = async (login, password) => {
         } 
 
     } catch (err) {
-        return {"error": "No se han enviado los parámetros"};
+        return {"error": "Los parámetros no son válidos o suficientes."};
     }
 }
 
@@ -58,7 +58,7 @@ export const createUser = async (username, email, password) => {
                 if (singup !== null) { return {"exito": "Se ha registrado con éxito"}; } 
             }
         } catch (err) {
-            return {"error": "No se han enviado los parámetros necesarios."};
+            return {"error": "Los parámetros no son válidos o suficientes."};
         }
 }
 
@@ -105,7 +105,7 @@ export const setUser = async (login, password, username, email, newPassword) => 
             if (singupUsername !== null || sigupEmail !== null) { return {"exito": "El usuario se ha actualizado con éxito"}; } 
 
         } catch (err) {
-            return {"error": "No se han enviado los parámetros necesarios."};
+            return {"error": "Los parámetros no son válidos o suficientes."};
         }
     }
 }
@@ -137,6 +137,6 @@ export const dropUser = async (login, password) => {
         if (dropByUsername !== null || dropByEmail !== null) { return {"exito": "Se ha borrado con éxito"}; } 
 
     } catch (err) {
-        return {"error": "No se han enviado los parámetros necesarios."};
+        return {"error": "Los parámetros no son válidos o suficientes."};
     }
 }
