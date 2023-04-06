@@ -133,6 +133,37 @@ export const dropEvent = async (user_id, event_id, tag) => {
     }
 }
 
+export const setDateEvent = async (event_id, startDate, startTime, endDate, endTime) => {
+    let mainDataEvent
+
+    try {
+        const arrStartDate = startDate.split("-");
+        const arrStartTime = startTime.split(":");
+        const arrEndDate = endDate.split("-");
+        const arrEndTime = endTime.split(":");
+
+        mainDataEvent = await Event.update
+        (
+            { 
+                startDate: new Date(arrStartDate[0], arrStartDate[1]-1, arrStartDate[2]),
+                startTime: `${arrStartTime[0]}:${arrStartTime[1]}`,
+                endDate: new Date(arrEndDate[0], arrEndDate[1]-1, arrEndDate[2]),
+                endTime: `${arrEndTime[0]}:${arrEndTime[1]}`,
+            },
+            { where: 
+                {
+                    id: event_id
+                }
+            }
+        );
+
+        if (mainDataEvent !== null) { return {"exito": "Se ha actualizado la fecha con éxito"}; } 
+        else { return {"error": "No se ha podido actualizar la fecha con éxito."}; }
+    } catch (err) {
+        return {"error": "Los parámetros no son válidos o suficientes."};
+    }
+}
+
 // Create and Update events by Events Type
 
 export const createExamEvent = async (user_id, startDate, startTime, endDate, endTime, short_desc, desc, url_img, url_doc, url_exam) => {
@@ -194,7 +225,7 @@ export const createExamEvent = async (user_id, startDate, startTime, endDate, en
     }
 }
 
-export const setExamEvent = async (user_id, event_id, startDate, startTime, endDate, endTime, short_desc, desc, url_img, url_doc, url_exam) => {
+export const setExamEvent = async (event_id, startDate, startTime, endDate, endTime, short_desc, desc, url_img, url_doc, url_exam) => {
     let mainDataEvent, dataEvent;
 
     try {
@@ -212,9 +243,7 @@ export const setExamEvent = async (user_id, event_id, startDate, startTime, endD
                 endTime: `${arrEndTime[0]}:${arrEndTime[1]}`,
                 short_desc: short_desc,
                 desc: desc,
-                url_img: url_img,
-                tag: "exam",
-                user_id: user_id
+                url_img: url_img
             },
             { where: 
                 {
@@ -308,7 +337,7 @@ export const createWorkEvent = async (user_id, startDate, startTime, endDate, en
     }
 }
 
-export const setWorkEvent = async (user_id, event_id, startDate, startTime, endDate, endTime, short_desc, desc, url_img, team, url_doc, url_work) => {
+export const setWorkEvent = async (event_id, startDate, startTime, endDate, endTime, short_desc, desc, url_img, team, url_doc, url_work) => {
     let mainDataEvent, dataEvent;
 
     try {
@@ -326,9 +355,7 @@ export const setWorkEvent = async (user_id, event_id, startDate, startTime, endD
                 endTime: `${arrEndTime[0]}:${arrEndTime[1]}`,
                 short_desc: short_desc,
                 desc: desc,
-                url_img: url_img,
-                tag: "work",
-                user_id: user_id
+                url_img: url_img
             },
             { where: 
                 {
@@ -421,7 +448,7 @@ export const createLeisureEvent = async (user_id, startDate, startTime, endDate,
     }
 }
 
-export const setLeisureEvent = async (user_id, event_id, startDate, startTime, endDate, endTime, short_desc, desc, url_img, url_ticket) => {
+export const setLeisureEvent = async (event_id, startDate, startTime, endDate, endTime, short_desc, desc, url_img, url_ticket) => {
     let mainDataEvent, dataEvent;
 
     try {
@@ -439,9 +466,7 @@ export const setLeisureEvent = async (user_id, event_id, startDate, startTime, e
                 endTime: `${arrEndTime[0]}:${arrEndTime[1]}`,
                 short_desc: short_desc,
                 desc: desc,
-                url_img: url_img,
-                tag: "leisure",
-                user_id: user_id
+                url_img: url_img
             },
             { where: 
                 {
@@ -533,7 +558,7 @@ export const createAppointmentEvent = async (user_id, startDate, startTime, endD
     }
 }
 
-export const setAppointmentEvent = async (user_id, event_id, startDate, startTime, endDate, endTime, short_desc, desc, url_img, url_ticket, url_req) => {
+export const setAppointmentEvent = async (event_id, startDate, startTime, endDate, endTime, short_desc, desc, url_img, url_ticket, url_req) => {
     let mainDataEvent, dataEvent;
 
     try {
@@ -551,9 +576,7 @@ export const setAppointmentEvent = async (user_id, event_id, startDate, startTim
                 endTime: `${arrEndTime[0]}:${arrEndTime[1]}`,
                 short_desc: short_desc,
                 desc: desc,
-                url_img: url_img,
-                tag: "appointment",
-                user_id: user_id
+                url_img: url_img
             },
             { where: 
                 {
