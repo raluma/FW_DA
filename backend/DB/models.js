@@ -81,6 +81,29 @@ export const event = {
     }
 }
 
+export const tag = {
+    id: {
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        primaryKey: true
+    },
+    tagName: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: true
+    },
+    color: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: true
+    },
+    tagNameSP: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: true
+    }
+}
+
 export const exam = {
     id: {
         type: DataTypes.INTEGER,
