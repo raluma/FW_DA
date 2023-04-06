@@ -1,4 +1,4 @@
-import { Event, Exam, Work, Leisure, Appointment } from "./sequelize.js";
+import { Event, Tag, Exam, Work, Leisure, Appointment } from "./sequelize.js";
 
 const eventType = (tag) => {
     switch (tag) {
@@ -95,6 +95,57 @@ export const getEvent = async (user_id, startDate, startTime, endDate, endTime, 
 
     } catch (err) {
         return {"error": "No se ha encontrado ese evento para ese usuario"};
+    }
+}
+
+export const getTags = async () => {
+    try {
+     return await Tag.findAll({
+        order: [['id', 'ASC']]
+     });
+    } catch(err) {
+        return {"error": "Ha ocurrido un error inesperado."};
+    }
+}
+
+export const getTag = async (tagName) => {
+    let tag;
+
+    try {
+        tag = await Tag.findOne
+        (
+            { where: 
+                { 
+                    tagName: tagName,
+                } 
+            }
+        );
+
+        if (tag !== null) return tag;
+        else return {"error": "Los datos no son válidos. No exise esta etiqueta."}; 
+
+    } catch (err) {
+        return {"error": "Los parámetros no son válidos o suficientes."};
+    }
+}
+
+export const createTag = async (tagName, color, tagNameSP) => {
+    let tag;
+
+    try {
+        tag = await Tag.create
+        (
+            { 
+                tagName: tagName,
+                color: color,
+                tagNameSP: tagNameSP
+            } 
+        );
+
+        if (tag !== null) { return {"exito": "La etiqueta se ha creado con éxito."}; } 
+        else { return {"error": "La etiqueta no se ha podido crear con éxito."}; }
+    } catch (err) {
+        return {"error": "Los parámetros no son válidos o suficientes."};
     }
 }
 
