@@ -92,7 +92,76 @@ export const exam = {
         allowNull: true,
         unique: false
     },
-    url_attachment: {
+    url_exam: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        unique: false
+    },
+    event_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        unique: true
+    }
+}
+
+export const work = {
+    id: {
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        primaryKey: true
+    },
+    team: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        unique: false
+    },
+    url_doc: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        unique: false
+    },
+    url_work: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        unique: false
+    },
+    event_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        unique: true
+    }
+}
+
+export const leisure = {
+    id: {
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        primaryKey: true
+    },
+    url_ticket: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        unique: false
+    },
+    event_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        unique: true
+    }
+}
+
+export const appointment = {
+    id: {
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        primaryKey: true
+    },
+    url_ticket: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        unique: false
+    },
+    url_req: {
         type: DataTypes.STRING,
         allowNull: true,
         unique: false
