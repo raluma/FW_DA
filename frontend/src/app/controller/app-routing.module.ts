@@ -20,7 +20,12 @@ const routes: Routes = [
   {
     path: 'event/:action/:short_desc/:datetime',
     component: Event
-  }
+  },
+  { 
+    path: '**', 
+    pathMatch: 'full', 
+    component: Home
+  },
 ];
 
 @NgModule({
