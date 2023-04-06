@@ -1,4 +1,13 @@
-import { Event, Exam } from "./sequelize.js";
+import { Event, Exam, Work, Leisure, Appointment } from "./sequelize.js";
+
+const eventType = (tag) => {
+    switch (tag) {
+        case "exam": return Exam;
+        case "work": return Work;
+        case "leisure": return Leisure;
+        case "appointment": return Appointment;  
+    }
+};
 
 export const getEvents = async (user_id) => {
     let mainDataEvents, dataEvent;
@@ -17,23 +26,15 @@ export const getEvents = async (user_id) => {
         for (let i = 0; i < mainDataEvents.length; i++) {
             let mainDataEvent = mainDataEvents[i]["dataValues"];
 
-            switch (mainDataEvent['tag']) {
-                case "exam":
-                    dataEvent = await Exam.findOne
-                    (
-                        { where: 
-                            { 
-                                event_id: mainDataEvent['id']
-                            } 
-                        }
-                    );
-                    break;
-            
-                default:
-                    dataEvent = [];
-                    break;
-            }
-
+            dataEvent = await eventType(mainDataEvent['tag']).findOne
+            (
+                { where: 
+                    { 
+                        event_id: mainDataEvent['id']
+                    } 
+                }
+            );
+                    
             if (dataEvent !== null) {
                 events[i] = {...mainDataEvent, ...dataEvent['dataValues']};
             } else {
@@ -72,23 +73,16 @@ export const getEvent = async (user_id, startDate, startTime, endDate, endTime, 
         );
 
         if (mainDataEvent !== null) {
-            switch (mainDataEvent['tag']) {
-                case "exam":
-                    dataEvent = await Exam.findOne
-                    (
-                        { where: 
-                            { 
-                                event_id: mainDataEvent['id']
-                            } 
-                        }
-                    );
-                    break;
             
-                default:
-                    dataEvent = [];
-                    break;
-            }
-
+            dataEvent = await eventType(mainDataEvent['tag']).findOne
+            (
+                { where: 
+                    { 
+                        event_id: mainDataEvent['id']
+                    } 
+                }
+            );
+                   
             if (dataEvent !== null) {
                 return {...mainDataEvent['dataValues'], ...dataEvent['dataValues']};
             } else {
@@ -104,7 +98,44 @@ export const getEvent = async (user_id, startDate, startTime, endDate, endTime, 
     }
 }
 
-export const createEvent = async (user_id, startDate, startTime, endDate, endTime, short_desc, desc, url_img, tag, url_doc, url_attachment) => {
+export const dropEvent = async (user_id, event_id, tag) => {
+    let mainDataEvent, dataEvent;
+
+    try {
+        mainDataEvent = await Event.destroy
+        (
+            { where: 
+                {
+                    id: event_id,
+                    user_id: user_id
+                }
+            }
+        );
+
+        if (mainDataEvent !== null) {
+           
+            dataEvent = await eventType(tag).destroy
+            (
+                { where: 
+                    {
+                        event_id: event_id
+                    }
+                }
+            );
+                 
+            if (dataEvent !== null) { return {"exito": "Se ha borrado con éxito"}; } 
+            else { return {"error": "No se ha podido borrar con éxito."}; }
+        } else {
+            return {"error": "No se ha podido borrar con éxito."};
+        }
+    } catch (err) {
+        return {"error": "Los parámetros no son válidos o suficientes."};
+    }
+}
+
+// Create and Update events by Events Type
+
+export const createExamEvent = async (user_id, startDate, startTime, endDate, endTime, short_desc, desc, url_img, url_doc, url_exam) => {
     let mainDataEvent, dataEvent;
 
     try {
@@ -123,7 +154,7 @@ export const createEvent = async (user_id, startDate, startTime, endDate, endTim
                 short_desc: short_desc,
                 desc: desc,
                 url_img: url_img,
-                tag: tag,
+                tag: "exam",
                 user_id: user_id
             } 
         );
@@ -143,21 +174,15 @@ export const createEvent = async (user_id, startDate, startTime, endDate, endTim
         );
 
         if (mainDataEvent !== null) {
-            switch (mainDataEvent['tag']) {
-                case "exam":
-                    dataEvent = await Exam.create
-                    (
-                        { 
-                            url_doc: url_doc,
-                            url_attachment: url_attachment,
-                            event_id: mainDataEvent['id']
-                        } 
-                    );
-                    break;
-            
-                default:
-                    break;
-            }
+
+                dataEvent = await Exam.create
+                (
+                    { 
+                        url_doc: url_doc,
+                        url_exam: url_exam,
+                        event_id: mainDataEvent['id']
+                    } 
+                );        
 
             if (dataEvent !== null) { return {"exito": "Se ha creado con éxito."}; } 
             else { return {"error": "No se ha podido crear con éxito."}; }
@@ -165,11 +190,11 @@ export const createEvent = async (user_id, startDate, startTime, endDate, endTim
             return {"error": "No se ha podido crear con éxito."};
         }
     } catch (err) {
-        return {"error": "No se han enviado los parámetros necesarios."};
+        return {"error": "Los parámetros no son válidos o suficientes."};
     }
 }
 
-export const setEvent = async (user_id, event_id, startDate, startTime, endDate, endTime, short_desc, desc, url_img, tag, url_doc, url_attachment) => {
+export const setExamEvent = async (user_id, event_id, startDate, startTime, endDate, endTime, short_desc, desc, url_img, url_doc, url_exam) => {
     let mainDataEvent, dataEvent;
 
     try {
@@ -188,7 +213,7 @@ export const setEvent = async (user_id, event_id, startDate, startTime, endDate,
                 short_desc: short_desc,
                 desc: desc,
                 url_img: url_img,
-                tag: tag,
+                tag: "exam",
                 user_id: user_id
             },
             { where: 
@@ -199,25 +224,19 @@ export const setEvent = async (user_id, event_id, startDate, startTime, endDate,
         );
 
         if (mainDataEvent !== null) {
-            switch (tag) {
-                case "exam":
-                    dataEvent = await Exam.update
-                    (
-                        { 
-                            url_doc: url_doc,
-                            url_attachment: url_attachment
-                        },
-                        { where: 
-                            {
-                                event_id: event_id
-                            }
-                        }
-                    );
-                    break;
-            
-                default:
-                    break;
-            }
+
+            dataEvent = await Exam.update
+            (
+                { 
+                    url_doc: url_doc,
+                    url_exam: url_exam
+                },
+                { where: 
+                    {
+                        event_id: event_id
+                    }
+                }
+            );        
 
             if (dataEvent !== null) { return {"exito": "Se ha actualizado con éxito"}; } 
             else { return {"error": "No se ha podido actualizar con éxito."}; }
@@ -225,48 +244,345 @@ export const setEvent = async (user_id, event_id, startDate, startTime, endDate,
             return {"error": "No se ha podido actualizar con éxito."};
         }
     } catch (err) {
-        return {"error": "No se han enviado los parámetros."};
+        return {"error": "Los parámetros no son válidos o suficientes."};
     }
 }
 
-export const dropEvent = async (user_id, event_id, tag) => {
+export const createWorkEvent = async (user_id, startDate, startTime, endDate, endTime, short_desc, desc, url_img, team, url_doc, url_work) => {
     let mainDataEvent, dataEvent;
 
     try {
-        mainDataEvent = await Event.destroy
+        const arrStartDate = startDate.split("-");
+        const arrStartTime = startTime.split(":");
+        const arrEndDate = endDate.split("-");
+        const arrEndTime = endTime.split(":");
+
+        mainDataEvent = await Event.create
+        (
+            { 
+                startDate: new Date(arrStartDate[0], arrStartDate[1]-1, arrStartDate[2]),
+                startTime: `${arrStartTime[0]}:${arrStartTime[1]}`,
+                endDate: new Date(arrEndDate[0], arrEndDate[1]-1, arrEndDate[2]),
+                endTime: `${arrEndTime[0]}:${arrEndTime[1]}`,
+                short_desc: short_desc,
+                desc: desc,
+                url_img: url_img,
+                tag: "work",
+                user_id: user_id
+            } 
+        );
+
+        mainDataEvent = await Event.findOne
         (
             { where: 
-                {
-                    id: event_id,
+                { 
+                    startDate: new Date(arrStartDate[0], arrStartDate[1]-1, arrStartDate[2]),
+                    startTime: `${arrStartTime[0]}:${arrStartTime[1]}`,
+                    endDate: new Date(arrEndDate[0], arrEndDate[1]-1, arrEndDate[2]),
+                    endTime: `${arrEndTime[0]}:${arrEndTime[1]}`,
+                    short_desc: short_desc,
                     user_id: user_id
+                } 
+            }
+        );
+
+        if (mainDataEvent !== null) {
+
+                dataEvent = await Work.create
+                (
+                    { 
+                        team: team,
+                        url_doc: url_doc,
+                        url_work: url_work,
+                        event_id: mainDataEvent['id']
+                    } 
+                );        
+
+            if (dataEvent !== null) { return {"exito": "Se ha creado con éxito."}; } 
+            else { return {"error": "No se ha podido crear con éxito."}; }
+        } else {
+            return {"error": "No se ha podido crear con éxito."};
+        }
+    } catch (err) {
+        return {"error": "Los parámetros no son válidos o suficientes."};
+    }
+}
+
+export const setWorkEvent = async (user_id, event_id, startDate, startTime, endDate, endTime, short_desc, desc, url_img, team, url_doc, url_work) => {
+    let mainDataEvent, dataEvent;
+
+    try {
+        const arrStartDate = startDate.split("-");
+        const arrStartTime = startTime.split(":");
+        const arrEndDate = endDate.split("-");
+        const arrEndTime = endTime.split(":");
+
+        mainDataEvent = await Event.update
+        (
+            { 
+                startDate: new Date(arrStartDate[0], arrStartDate[1]-1, arrStartDate[2]),
+                startTime: `${arrStartTime[0]}:${arrStartTime[1]}`,
+                endDate: new Date(arrEndDate[0], arrEndDate[1]-1, arrEndDate[2]),
+                endTime: `${arrEndTime[0]}:${arrEndTime[1]}`,
+                short_desc: short_desc,
+                desc: desc,
+                url_img: url_img,
+                tag: "work",
+                user_id: user_id
+            },
+            { where: 
+                {
+                    id: event_id
                 }
             }
         );
 
         if (mainDataEvent !== null) {
-            switch (tag) {
-                case "exam":
-                    dataEvent = await Exam.destroy
-                    (
-                        { where: 
-                            {
-                                event_id: event_id
-                            }
-                        }
-                    );
-                    break;
-            
-                default:
-                    break;
-            }
 
-            if (dataEvent !== null) { return {"exito": "Se ha borrado con éxito"}; } 
-            else { return {"error": "No se ha podido borrar con éxito."}; }
+            dataEvent = await Work.update
+            (
+                { 
+                    team: team,
+                    url_doc: url_doc,
+                    url_work: url_work
+                },
+                { where: 
+                    {
+                        event_id: event_id
+                    }
+                }
+            );        
+
+            if (dataEvent !== null) { return {"exito": "Se ha actualizado con éxito"}; } 
+            else { return {"error": "No se ha podido actualizar con éxito."}; }
         } else {
-            return {"error": "No se ha podido borrar con éxito."};
+            return {"error": "No se ha podido actualizar con éxito."};
         }
     } catch (err) {
-        return {"error": "No se han enviado los parámetros."};
+        return {"error": "Los parámetros no son válidos o suficientes."};
     }
 }
 
+export const createLeisureEvent = async (user_id, startDate, startTime, endDate, endTime, short_desc, desc, url_img, url_ticket) => {
+    let mainDataEvent, dataEvent;
+
+    try {
+        const arrStartDate = startDate.split("-");
+        const arrStartTime = startTime.split(":");
+        const arrEndDate = endDate.split("-");
+        const arrEndTime = endTime.split(":");
+
+        mainDataEvent = await Event.create
+        (
+            { 
+                startDate: new Date(arrStartDate[0], arrStartDate[1]-1, arrStartDate[2]),
+                startTime: `${arrStartTime[0]}:${arrStartTime[1]}`,
+                endDate: new Date(arrEndDate[0], arrEndDate[1]-1, arrEndDate[2]),
+                endTime: `${arrEndTime[0]}:${arrEndTime[1]}`,
+                short_desc: short_desc,
+                desc: desc,
+                url_img: url_img,
+                tag: "leisure",
+                user_id: user_id
+            } 
+        );
+
+        mainDataEvent = await Event.findOne
+        (
+            { where: 
+                { 
+                    startDate: new Date(arrStartDate[0], arrStartDate[1]-1, arrStartDate[2]),
+                    startTime: `${arrStartTime[0]}:${arrStartTime[1]}`,
+                    endDate: new Date(arrEndDate[0], arrEndDate[1]-1, arrEndDate[2]),
+                    endTime: `${arrEndTime[0]}:${arrEndTime[1]}`,
+                    short_desc: short_desc,
+                    user_id: user_id
+                } 
+            }
+        );
+
+        if (mainDataEvent !== null) {
+
+                dataEvent = await Leisure.create
+                (
+                    { 
+                        url_ticket: url_ticket,
+                        event_id: mainDataEvent['id']
+                    } 
+                );        
+
+            if (dataEvent !== null) { return {"exito": "Se ha creado con éxito."}; } 
+            else { return {"error": "No se ha podido crear con éxito."}; }
+        } else {
+            return {"error": "No se ha podido crear con éxito."};
+        }
+    } catch (err) {
+        return {"error": "Los parámetros no son válidos o suficientes."};
+    }
+}
+
+export const setLeisureEvent = async (user_id, event_id, startDate, startTime, endDate, endTime, short_desc, desc, url_img, url_ticket) => {
+    let mainDataEvent, dataEvent;
+
+    try {
+        const arrStartDate = startDate.split("-");
+        const arrStartTime = startTime.split(":");
+        const arrEndDate = endDate.split("-");
+        const arrEndTime = endTime.split(":");
+
+        mainDataEvent = await Event.update
+        (
+            { 
+                startDate: new Date(arrStartDate[0], arrStartDate[1]-1, arrStartDate[2]),
+                startTime: `${arrStartTime[0]}:${arrStartTime[1]}`,
+                endDate: new Date(arrEndDate[0], arrEndDate[1]-1, arrEndDate[2]),
+                endTime: `${arrEndTime[0]}:${arrEndTime[1]}`,
+                short_desc: short_desc,
+                desc: desc,
+                url_img: url_img,
+                tag: "leisure",
+                user_id: user_id
+            },
+            { where: 
+                {
+                    id: event_id
+                }
+            }
+        );
+
+        if (mainDataEvent !== null) {
+
+            dataEvent = await Work.update
+            (
+                { 
+                    url_ticket
+                },
+                { where: 
+                    {
+                        event_id: event_id
+                    }
+                }
+            );        
+
+            if (dataEvent !== null) { return {"exito": "Se ha actualizado con éxito"}; } 
+            else { return {"error": "No se ha podido actualizar con éxito."}; }
+        } else {
+            return {"error": "No se ha podido actualizar con éxito."};
+        }
+    } catch (err) {
+        return {"error": "Los parámetros no son válidos o suficientes."};
+    }
+}
+
+export const createAppointmentEvent = async (user_id, startDate, startTime, endDate, endTime, short_desc, desc, url_img, url_ticket, url_req) => {
+    let mainDataEvent, dataEvent;
+
+    try {
+        const arrStartDate = startDate.split("-");
+        const arrStartTime = startTime.split(":");
+        const arrEndDate = endDate.split("-");
+        const arrEndTime = endTime.split(":");
+
+        mainDataEvent = await Event.create
+        (
+            { 
+                startDate: new Date(arrStartDate[0], arrStartDate[1]-1, arrStartDate[2]),
+                startTime: `${arrStartTime[0]}:${arrStartTime[1]}`,
+                endDate: new Date(arrEndDate[0], arrEndDate[1]-1, arrEndDate[2]),
+                endTime: `${arrEndTime[0]}:${arrEndTime[1]}`,
+                short_desc: short_desc,
+                desc: desc,
+                url_img: url_img,
+                tag: "appointment",
+                user_id: user_id
+            } 
+        );
+
+        mainDataEvent = await Event.findOne
+        (
+            { where: 
+                { 
+                    startDate: new Date(arrStartDate[0], arrStartDate[1]-1, arrStartDate[2]),
+                    startTime: `${arrStartTime[0]}:${arrStartTime[1]}`,
+                    endDate: new Date(arrEndDate[0], arrEndDate[1]-1, arrEndDate[2]),
+                    endTime: `${arrEndTime[0]}:${arrEndTime[1]}`,
+                    short_desc: short_desc,
+                    user_id: user_id
+                } 
+            }
+        );
+
+        if (mainDataEvent !== null) {
+
+                dataEvent = await Appointment.create
+                (
+                    { 
+                        url_ticket: url_ticket,
+                        url_req: url_req,
+                        event_id: mainDataEvent['id']
+                    } 
+                );        
+
+            if (dataEvent !== null) { return {"exito": "Se ha creado con éxito."}; } 
+            else { return {"error": "No se ha podido crear con éxito."}; }
+        } else {
+            return {"error": "No se ha podido crear con éxito."};
+        }
+    } catch (err) {
+        return {"error": "Los parámetros no son válidos o suficientes."};
+    }
+}
+
+export const setAppointmentEvent = async (user_id, event_id, startDate, startTime, endDate, endTime, short_desc, desc, url_img, url_ticket, url_req) => {
+    let mainDataEvent, dataEvent;
+
+    try {
+        const arrStartDate = startDate.split("-");
+        const arrStartTime = startTime.split(":");
+        const arrEndDate = endDate.split("-");
+        const arrEndTime = endTime.split(":");
+
+        mainDataEvent = await Event.update
+        (
+            { 
+                startDate: new Date(arrStartDate[0], arrStartDate[1]-1, arrStartDate[2]),
+                startTime: `${arrStartTime[0]}:${arrStartTime[1]}`,
+                endDate: new Date(arrEndDate[0], arrEndDate[1]-1, arrEndDate[2]),
+                endTime: `${arrEndTime[0]}:${arrEndTime[1]}`,
+                short_desc: short_desc,
+                desc: desc,
+                url_img: url_img,
+                tag: "appointment",
+                user_id: user_id
+            },
+            { where: 
+                {
+                    id: event_id
+                }
+            }
+        );
+
+        if (mainDataEvent !== null) {
+
+            dataEvent = await Work.update
+            (
+                { 
+                    url_ticket: url_ticket,
+                    url_req: url_req
+                },
+                { where: 
+                    {
+                        event_id: event_id
+                    }
+                }
+            );        
+
+            if (dataEvent !== null) { return {"exito": "Se ha actualizado con éxito"}; } 
+            else { return {"error": "No se ha podido actualizar con éxito."}; }
+        } else {
+            return {"error": "No se ha podido actualizar con éxito."};
+        }
+    } catch (err) {
+        return {"error": "Los parámetros no son válidos o suficientes."};
+    }
+}
