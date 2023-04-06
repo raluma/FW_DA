@@ -3,7 +3,7 @@ import cors from 'cors';
 import * as dotenv from 'dotenv';
 import { getUser, createUser, setUser, dropUser } from './DB/userQueries.js';
 import { 
-  getEvents, getEvent, dropEvent, createExamEvent, setExamEvent,
+  getEvents, getEvent, dropEvent, setDateEvent, createExamEvent, setExamEvent,
   createWorkEvent, setWorkEvent, createLeisureEvent, setLeisureEvent,
   createAppointmentEvent, setAppointmentEvent 
 } from './DB/eventQueries.js';
@@ -149,6 +149,33 @@ app.post('/dropEvent', async (req, res) => {
   }
 })
 
+app.post('/setDateEvent', async (req, res) => {
+  const user = await getUser (
+    req.query.login, 
+    req.query.password
+  );
+
+  if (existError(user)) {
+    res.status(404).send(user);
+  } 
+  else {
+    const event = await setDateEvent (
+      req.query.event_id,
+      req.query.startDate, 
+      req.query.startTime,
+      req.query.endDate, 
+      req.query.endTime
+    );
+    
+    if (existError(event)) {
+      res.status(404).send(event);
+    } 
+    else {
+      res.status(200).send(event);
+    }
+  }
+})
+
 app.post('/createExamEvent', async (req, res) => {
   const user = await getUser (
     req.query.login, 
@@ -201,7 +228,6 @@ app.post('/setExamEvent', async (req, res) => {
     } 
     else {
       const event = await setExamEvent (
-        user.id,
         req.query.event_id,
         req.query.startDate, 
         req.query.startTime,
@@ -276,7 +302,6 @@ app.post('/setWorkEvent', async (req, res) => {
     } 
     else {
       const event = await setWorkEvent (
-        user.id,
         req.query.event_id,
         req.query.startDate, 
         req.query.startTime,
@@ -341,7 +366,6 @@ app.post('/setLeisureEvent', async (req, res) => {
   } 
   else {
     const event = await setLeisureEvent (
-      user.id,
       req.query.event_id,
       req.query.startDate, 
       req.query.startTime,
@@ -405,7 +429,6 @@ app.post('/setAppointmentEvent', async (req, res) => {
   } 
   else {
     const event = await setAppointmentEvent (
-      user.id,
       req.query.event_id,
       req.query.startDate, 
       req.query.startTime,
