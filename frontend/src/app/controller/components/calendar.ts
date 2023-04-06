@@ -111,7 +111,7 @@ import { Home } from '../pages/home';
             let endDate = `${event.end.getFullYear()}-${event.end.getMonth()+1}-${event.end.getDate()}`;
             let endTime = `${event.end.getHours()}:${event.end.getMinutes()}`;
   
-            this.http.post(`http://localhost:3000/setEvent?login=${this.authUser}&password=${this.password}&event_id=${event.id}&startDate=${startDate}&startTime=${startTime}&endDate=${endDate}&endTime=${endTime}&short_desc=${event.title}&desc=${event.extendedProps['desc']}&url_img=${event.extendedProps['url_img']}&tag=${event.extendedProps['tag']}&url_doc=${event.extendedProps['url_doc']}&url_attachment=${event.extendedProps['url_attachment']}`, null)
+            this.http.post(`http://localhost:3000/setDateEvent?login=${this.authUser}&password=${this.password}&event_id=${event.id}&startDate=${startDate}&startTime=${startTime}&endDate=${endDate}&endTime=${endTime}`, null)
               .subscribe(data => {
                 console.log(data);
             });
