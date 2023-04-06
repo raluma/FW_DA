@@ -1,5 +1,5 @@
 import { Sequelize } from 'sequelize';
-import { user, event, exam, work, leisure, appointment } from './models.js';
+import { user, event, tag, exam, work, leisure, appointment } from './models.js';
 import * as dotenv from 'dotenv';
 
 dotenv.config();
@@ -14,6 +14,7 @@ export const sequelize = new Sequelize(DATABASE, USERNAME, PASSWORD, {
 
 export const User = sequelize.define('User', user);
 export const Event = sequelize.define('Event', event);
+export const Tag = sequelize.define('Tag', tag);
 export const Exam = sequelize.define('Exam', exam);
 export const Work = sequelize.define('Work', work);
 export const Leisure = sequelize.define('Leisure', leisure);
@@ -21,6 +22,7 @@ export const Appointment = sequelize.define('Appointment', appointment);
 
 await User.sync({ alter: true });
 await Event.sync({ alter: true });
+await Tag.sync({ alter: true });
 await Exam.sync({ alter: true });
 await Work.sync({ alter: true });
 await Leisure.sync({ alter: true });
