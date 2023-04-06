@@ -6,6 +6,7 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import listPlugin from '@fullcalendar/list';
 import { faCalendar, faEdit } from '@fortawesome/free-regular-svg-icons';
 import { Home } from '../pages/home';
+import { Tag } from '../../model/tag';
 
 @Component({
     selector: 'calendar',
@@ -18,7 +19,8 @@ import { Home } from '../pages/home';
 
     authUser = localStorage.getItem("authUser");
     password = localStorage.getItem("password");
-  
+
+    tags: Tag[] = [];
     initialEvents: EventInput[] = [];
   
     calendarOptions: CalendarOptions = {
@@ -50,35 +52,57 @@ import { Home } from '../pages/home';
     };
   
     ngOnInit(): void {
+      this.http.get<Tag[]>(`http://localhost:3000/getTags`)
+      .subscribe((data) => {
+        this.tags = data;
+      });
+
       this.http.post(`http://localhost:3000/getEvents?login=${this.authUser}&password=${this.password}`, null)
       .subscribe(data => {
         let arrStartDate, arrStartTime, arrEndDate, arrEndTime;
+        let allDay = false;
   
         for (const [i, event] of Object.entries(data)) {
-          arrStartDate = event['startDate'].split("-");
-          arrStartTime = event['startTime'].split(":");
-          arrEndDate = event['endDate'].split("-");
-          arrEndTime = event['endTime'].split(":");
-  
-          this.initialEvents.push
-          (
-            {
-              id: event['event_id'],
-              title: event['short_desc'],
-              desc: event['desc'],
-              start: new Date(arrStartDate[0], arrStartDate[1]-1, arrStartDate[2], arrStartTime[0], arrStartTime[1]),
-              end: new Date(arrEndDate[0], arrEndDate[1]-1, arrEndDate[2], arrEndTime[0], arrEndTime[1]),
-              url_img: event['url_img'],
-              tag: event['tag'],
-              user_id: event['user_id'],
-              url_doc: event['url_doc'],
-              url_attachment: event['url_attachment'],
-              allDay: event['time'] === "0:0" ? true : false
+
+          this.http.get(`http://localhost:3000/getTag?tagName=${event['tag']}`)
+          .subscribe((data : any) => {
+            arrStartDate = event['startDate'].split("-");
+            arrStartTime = event['startTime'].split(":");
+            arrEndDate = event['endDate'].split("-");
+            arrEndTime = event['endTime'].split(":");      
+
+            if (arrStartDate[0] === arrEndDate[0] && arrStartDate[1] === arrEndDate[1]
+              && Number(arrStartDate[2]) + 1 === Number(arrEndDate[2]) 
+              && arrStartTime[0] === arrEndTime[0]) {
+                allDay = true
             }
-          )
+
+            this.initialEvents.push
+            (
+              {
+                id: event['event_id'],
+                title: event['short_desc'],
+                desc: event['desc'],
+                start: new Date(arrStartDate[0], arrStartDate[1]-1, arrStartDate[2], arrStartTime[0], arrStartTime[1]),
+                end: new Date(arrEndDate[0], arrEndDate[1]-1, arrEndDate[2], arrEndTime[0], arrEndTime[1]),
+                url_img: event['url_img'],
+                tag: event['tag'],
+                user_id: event['user_id'],
+                url_doc: event['url_doc'],
+                url_attachment: event['url_attachment'],
+                allDay: allDay,
+                color: data['color']
+              }
+            );
+          });
         }
 
-        this.calendarVisible = true;
+        // Necesario esperar a tener los datos para representarlos
+        setTimeout(() => {
+          this.calendarVisible = true;
+        }, 100);
+
+        console.log(this.initialEvents)
       });
     }
 
