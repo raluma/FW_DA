@@ -97,12 +97,14 @@ import { Tag } from '../../model/tag';
           });
         }
 
-        // Necesario esperar a tener los datos para representarlos
+        // Para esperar a tener los datos para representarlos
+
         setTimeout(() => {
           this.calendarVisible = true;
         }, 100);
 
-        console.log(this.initialEvents)
+        // Para esperar a tener los datos para representarlos
+
       });
     }
 
@@ -158,20 +160,6 @@ import { Tag } from '../../model/tag';
 
         window.location.href = `event/add/${startDate}&${startTime}_${endDate}&${endTime}`;
       }
-      // const title = prompt('Please enter a new title for your event');
-      // const calendarApi = selectInfo.view.calendar;
-  
-      // calendarApi.unselect(); // clear date selection
-  
-      // if (title) {
-      //   calendarApi.addEvent({
-      //     id: "1",
-      //     title,
-      //     start: selectInfo.startStr,
-      //     end: selectInfo.endStr,
-      //     allDay: selectInfo.allDay
-      //   });
-      // }
     }
   
     handleEventClick(clickInfo: EventClickArg) {
@@ -186,8 +174,5 @@ import { Tag } from '../../model/tag';
           `event/edit/${clickInfo.event.title}/${startDate}&${startTime}_${endDate}&${endTime}`;
         }
       }
-      // if (confirm(`Are you sure you want to delete the event '${clickInfo.event.title}'`)) {
-      //   clickInfo.event.remove();
-      // }
     }
   }
