@@ -1,5 +1,9 @@
 import { User } from "./sequelize.js";
 
+export const createAdmin = async () => {
+    await User.create({ username: "admin", email: "admin@gmail.com", password: "admin", role: "admin" });
+}
+
 export const getUser = async (login, password) => {
     let loginWithUsername, loginWithEmail;
 
