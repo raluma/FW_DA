@@ -3,8 +3,8 @@ import cors from 'cors';
 import * as dotenv from 'dotenv';
 import { getUser, createUser, setUser, dropUser } from './DB/userQueries.js';
 import { 
-  getEvents, getEvent, getTags, getTag, createTag, dropEvent, setDateEvent, 
-  createExamEvent, setExamEvent, createWorkEvent, setWorkEvent, 
+  createAdmin, getEvents, getEvent, getTags, getTag, createTag, dropEvent, 
+  setDateEvent, createExamEvent, setExamEvent, createWorkEvent, setWorkEvent, 
   createLeisureEvent, setLeisureEvent, createAppointmentEvent, setAppointmentEvent, 
 } from './DB/eventQueries.js';
 
