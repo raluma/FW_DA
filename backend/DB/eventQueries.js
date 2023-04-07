@@ -17,9 +17,15 @@ export const getEvents = async (user_id) => {
         mainDataEvents = await Event.findAll
         (
             { where: 
-                { 
-                    user_id: user_id
-                } 
+                { $or:  [
+                            {
+                                user_id: user_id
+                            },
+                            {
+                                see_all: true
+                            }
+                        ]
+                }
             }
         );
 
@@ -49,7 +55,7 @@ export const getEvents = async (user_id) => {
     }
 }
 
-export const getEvent = async (user_id, startDate, startTime, endDate, endTime, short_desc) => {
+export const getEvent = async (startDate, startTime, endDate, endTime, short_desc) => {
     let mainDataEvent, dataEvent;
 
     try {
@@ -66,8 +72,7 @@ export const getEvent = async (user_id, startDate, startTime, endDate, endTime, 
                     startTime: `${arrStartTime[0]}:${arrStartTime[1]}`,
                     endDate: new Date(arrEndDate[0], arrEndDate[1]-1, arrEndDate[2]),
                     endTime: `${arrEndTime[0]}:${arrEndTime[1]}`,
-                    short_desc: short_desc,
-                    user_id: user_id
+                    short_desc: short_desc
                 } 
             }
         );
