@@ -142,7 +142,6 @@ app.post('/getEvent', async (req, res) => {
   } 
   else {
     const event = await getEvent (
-      user.id,
       req.query.startDate, 
       req.query.startTime,
       req.query.endDate, 
