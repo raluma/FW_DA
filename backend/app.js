@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import * as dotenv from 'dotenv';
-import {createAdmin, getUser, createUser, setUser, dropUser } from './DB/userQueries.js';
+import { createAdmin, getUser, createUser, setUser, dropUser } from './DB/userQueries.js';
 import { 
   getEvents, getEvent, getTags, getTag, createTag, dropEvent, setDateEvent, 
   createExamEvent, setExamEvent, createWorkEvent, setWorkEvent, 
@@ -12,8 +12,8 @@ dotenv.config();
 const app = express();
 
 // createAdmin();
-// createExamEvent(1, "2023-04-06", "0:0", "2023-04-07", "0:0", "Examen", null, null, null, null);
-// createWorkEvent(1, "2023-04-06", "0:0", "2023-04-07", "0:0", "Trabajo", null, null, null, null, null);
+// createExamEvent(true, 1, "2023-04-06", "0:0", "2023-04-07", "0:0", "Examen", null, null, null, null);
+// createWorkEvent(true, 1, "2023-04-06", "0:0", "2023-04-07", "0:0", "Trabajo", null, null, null, null, null);
 // createLeisureEvent(1, "2023-04-06", "0:0", "2023-04-07", "0:0", "Ocio", null, null, null);
 // createAppointmentEvent(1, "2023-04-06", "0:0", "2023-04-07", "0:0", "Cita", null, null, null, null);
 // createTag("exam", "dodgerBlue", "Examen");
@@ -224,6 +224,7 @@ app.post('/createExamEvent', async (req, res) => {
     } 
     else {
       const event = await createExamEvent (
+        req.query.see_all,
         user.id,
         req.query.startDate, 
         req.query.startTime,
@@ -261,6 +262,7 @@ app.post('/setExamEvent', async (req, res) => {
     } 
     else {
       const event = await setExamEvent (
+        req.query.see_all,
         req.query.event_id,
         req.query.startDate, 
         req.query.startTime,
@@ -298,6 +300,7 @@ app.post('/createWorkEvent', async (req, res) => {
     } 
     else {
       const event = await createWorkEvent (
+        req.query.see_all,
         user.id,
         req.query.startDate, 
         req.query.startTime,
@@ -335,6 +338,7 @@ app.post('/setWorkEvent', async (req, res) => {
     } 
     else {
       const event = await setWorkEvent (
+        req.query.see_all,
         req.query.event_id,
         req.query.startDate, 
         req.query.startTime,
