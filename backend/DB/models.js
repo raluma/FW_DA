@@ -78,6 +78,11 @@ export const event = {
         type: DataTypes.INTEGER,
         allowNull: false,
         unique: false
+    },
+    see_all: {
+        type: DataTypes.BOOLEAN,
+        allowNull: true,
+        unique: false
     }
 }
 
