@@ -11,15 +11,15 @@ import {
 dotenv.config();
 const app = express();
 
-createUser("Ralu", "ralu@gmail.com", "1234");
-createExamEvent(1, "2023-04-06", "0:0", "2023-04-07", "0:0", "Examen", null, null, null, null);
-createWorkEvent(1, "2023-04-06", "0:0", "2023-04-07", "0:0", "Trabajo", null, null, null, null, null);
-createLeisureEvent(1, "2023-04-06", "0:0", "2023-04-07", "0:0", "Ocio", null, null, null);
-createAppointmentEvent(1, "2023-04-06", "0:0", "2023-04-07", "0:0", "Cita", null, null, null, null);
-createTag("exam", "dodgerBlue", "Examen");
-createTag("work", "orange", "Trabajo");
-createTag("leisure", "violet", "Ocio");
-createTag("appointment", "green", "Cita");
+// createAdmin();
+// createExamEvent(1, "2023-04-06", "0:0", "2023-04-07", "0:0", "Examen", null, null, null, null);
+// createWorkEvent(1, "2023-04-06", "0:0", "2023-04-07", "0:0", "Trabajo", null, null, null, null, null);
+// createLeisureEvent(1, "2023-04-06", "0:0", "2023-04-07", "0:0", "Ocio", null, null, null);
+// createAppointmentEvent(1, "2023-04-06", "0:0", "2023-04-07", "0:0", "Cita", null, null, null, null);
+// createTag("exam", "dodgerBlue", "Examen");
+// createTag("work", "orange", "Trabajo");
+// createTag("leisure", "violet", "Ocio");
+// createTag("appointment", "green", "Cita");
 
 const { PORT, AUTH_WEB } = process.env;
 
