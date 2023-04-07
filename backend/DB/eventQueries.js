@@ -1,4 +1,5 @@
 import { Event, Tag, Exam, Work, Leisure, Appointment } from "./sequelize.js";
+import { Op } from "sequelize";
 
 const eventType = (tag) => {
     switch (tag) {
@@ -17,15 +18,7 @@ export const getEvents = async (user_id) => {
         mainDataEvents = await Event.findAll
         (
             { where: 
-                { $or:  [
-                            {
-                                user_id: user_id
-                            },
-                            {
-                                see_all: true
-                            }
-                        ]
-                }
+                { [Op.or]:  [{ user_id: user_id }, { see_all: true }] }
             }
         );
 
