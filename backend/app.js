@@ -1,10 +1,10 @@
 import express from 'express';
 import cors from 'cors';
 import * as dotenv from 'dotenv';
-import { getUser, createUser, setUser, dropUser } from './DB/userQueries.js';
+import {createAdmin, getUser, createUser, setUser, dropUser } from './DB/userQueries.js';
 import { 
-  createAdmin, getEvents, getEvent, getTags, getTag, createTag, dropEvent, 
-  setDateEvent, createExamEvent, setExamEvent, createWorkEvent, setWorkEvent, 
+  getEvents, getEvent, getTags, getTag, createTag, dropEvent, setDateEvent, 
+  createExamEvent, setExamEvent, createWorkEvent, setWorkEvent, 
   createLeisureEvent, setLeisureEvent, createAppointmentEvent, setAppointmentEvent, 
 } from './DB/eventQueries.js';
 
