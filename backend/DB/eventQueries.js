@@ -215,7 +215,7 @@ export const setDateEvent = async (event_id, startDate, startTime, endDate, endT
 
 // Create and Update events by Events Type
 
-export const createExamEvent = async (user_id, startDate, startTime, endDate, endTime, short_desc, desc, url_img, url_doc, url_exam) => {
+export const createExamEvent = async (see_all, user_id, startDate, startTime, endDate, endTime, short_desc, desc, url_img, url_doc, url_exam) => {
     let mainDataEvent, dataEvent;
 
     try {
@@ -235,7 +235,8 @@ export const createExamEvent = async (user_id, startDate, startTime, endDate, en
                 desc: desc,
                 url_img: url_img,
                 tag: "exam",
-                user_id: user_id
+                user_id: user_id,
+                see_all: Boolean(see_all)
             } 
         );
 
@@ -274,7 +275,7 @@ export const createExamEvent = async (user_id, startDate, startTime, endDate, en
     }
 }
 
-export const setExamEvent = async (event_id, startDate, startTime, endDate, endTime, short_desc, desc, url_img, url_doc, url_exam) => {
+export const setExamEvent = async (see_all, event_id, startDate, startTime, endDate, endTime, short_desc, desc, url_img, url_doc, url_exam) => {
     let mainDataEvent, dataEvent;
 
     try {
@@ -326,7 +327,7 @@ export const setExamEvent = async (event_id, startDate, startTime, endDate, endT
     }
 }
 
-export const createWorkEvent = async (user_id, startDate, startTime, endDate, endTime, short_desc, desc, url_img, team, url_doc, url_work) => {
+export const createWorkEvent = async (see_all, user_id, startDate, startTime, endDate, endTime, short_desc, desc, url_img, team, url_doc, url_work) => {
     let mainDataEvent, dataEvent;
 
     try {
@@ -346,7 +347,8 @@ export const createWorkEvent = async (user_id, startDate, startTime, endDate, en
                 desc: desc,
                 url_img: url_img,
                 tag: "work",
-                user_id: user_id
+                user_id: user_id,
+                see_all: Boolean(see_all)
             } 
         );
 
@@ -386,7 +388,7 @@ export const createWorkEvent = async (user_id, startDate, startTime, endDate, en
     }
 }
 
-export const setWorkEvent = async (event_id, startDate, startTime, endDate, endTime, short_desc, desc, url_img, team, url_doc, url_work) => {
+export const setWorkEvent = async (see_all, event_id, startDate, startTime, endDate, endTime, short_desc, desc, url_img, team, url_doc, url_work) => {
     let mainDataEvent, dataEvent;
 
     try {
