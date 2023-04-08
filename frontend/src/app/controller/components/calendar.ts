@@ -164,9 +164,9 @@ import { Tag } from '../../model/tag';
     handleDateSelect(selectInfo: DateSelectArg) {
       if (confirm(`¿Quieres CREAR un evento nuevo?`)) {
         const startDate = `${selectInfo.start.getFullYear()}-${selectInfo.start.getMonth()+1}-${selectInfo.start.getDate()}`;
-        const startTime = `${selectInfo.start.getHours()}:${selectInfo.start.getMinutes()}`;
+        const startTime = selectInfo.start.toTimeString().substring(0, 5);
         const endDate = `${selectInfo.end.getFullYear()}-${selectInfo.end.getMonth()+1}-${selectInfo.end.getDate()}`;
-        const endTime = `${selectInfo.end.getHours()}:${selectInfo.end.getMinutes()}`;
+        const endTime = selectInfo.end.toTimeString().substring(0, 5)
 
         window.location.href = `event/add/${startDate}&${startTime}_${endDate}&${endTime}`;
       }
@@ -176,9 +176,9 @@ import { Tag } from '../../model/tag';
       if (confirm(`¿Quieres VER/EDITAR el evento '${clickInfo.event.title}'?`)) {
         if (clickInfo.event.start !== null && clickInfo.event.end !== null) {
           const startDate = `${clickInfo.event.start.getFullYear()}-${clickInfo.event.start.getMonth()+1}-${clickInfo.event.start.getDate()}`;
-          const startTime = `${clickInfo.event.start.getHours()}:${clickInfo.event.start.getMinutes()}`;
+          const startTime = clickInfo.event.start.toTimeString().substring(0, 5);
           const endDate = `${clickInfo.event.end.getFullYear()}-${clickInfo.event.end.getMonth()+1}-${clickInfo.event.end.getDate()}`;
-          const endTime = `${clickInfo.event.end.getHours()}:${clickInfo.event.end.getMinutes()}`;
+          const endTime = clickInfo.event.start.toTimeString().substring(0, 5);
         
           window.location.href = 
           `event/edit/${clickInfo.event.title}/${startDate}&${startTime}_${endDate}&${endTime}`;
