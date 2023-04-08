@@ -85,11 +85,11 @@ export const getEvent = async (startDate, startTime, endDate, endTime, short_des
             if (dataEvent !== null) {
                 return {...mainDataEvent['dataValues'], ...dataEvent['dataValues']};
             } else {
-                return {"error": "No existe ninguna tarea en esa fecha y con esa descripción corta de ese usuario."}; 
+                return {"error": "No existe ninguna tarea en esa fecha y con esa descripción corta de este usuario."}; 
             }
         }
         else {  
-            return {"error": "No existe ninguna tarea en esa fecha y con esa descripción corta de ese usuario."}; 
+            return {"error": "No existe ninguna tarea en esa fecha y con esa descripción corta de este usuario."}; 
         }
 
     } catch (err) {
