@@ -36,149 +36,75 @@ app.get('/', async (req, res) => {
 })
 
 app.get('/getTags', async (req, res) => {
-  const tags = await getTags();
-
-  if (existError(tags)) {
-    res.status(404).send(tags);
-  } 
-  else {
-    res.status(200).send(tags);
-  }
+  res.status(200).send(await getTags());
 })
 
 app.get('/getTag', async (req, res) => {
-  const tag = await getTag ( 
-    req.query.tagName
-  );
-
-  if (existError(tag)) {
-    res.status(404).send(tag);
-  } 
-  else {
-    res.status(200).send(tag)
-  }
+  res.status(200).send(await getTag(req.query.tagName))
 })
 
 app.post('/login', async (req, res) => {
-  const user = await getUser (
-    req.query.login, 
-    req.query.password
-  );
-
-  res.status(200).send(user);
+  res.status(200).send(await getUser(req.query.login, req.query.password));  
 })
 
 app.post('/signup', async (req, res) => {
-  const user = await createUser (
+  res.status(200).send(await createUser(
     req.query.username, 
-    req.query.email,
+    req.query.email, 
     req.query.password
-  );
-
-  if (existError(user)) {
-    res.status(404).send(user);
-  } else {
-    res.status(200).send(user);
-  }
+  ));
 })
 
 app.post('/setUser', async (req, res) => {
-  const user = await setUser (
+  res.status(200).send(await setUser(
     req.query.login,
     req.query.password,
     req.query.username, 
     req.query.email,
     req.query.newPassword
-  );
-
-  if (existError(user)) {
-    res.status(404).send(user);
-  } else {
-    res.status(200).send(user);
-  }
+  ));
 })
 
 app.post('/dropUser', async (req, res) => {
-  const user = await dropUser (
-    req.query.login,
-    req.query.password
-  );
-
-  if (existError(user)) {
-    res.status(404).send(user);
-  } else {
-    res.status(200).send(user);
-  }
+  res.status(200).send(await dropUser(req.query.login, req.query.password));
 })
 
 app.post('/getEvents', async (req, res) => {
-  const user = await getUser (
-    req.query.login, 
-    req.query.password
-  );
+  const user = await getUser(req.query.login, req.query.password);
 
   if (existError(user)) {
-    res.status(404).send(user);
+    res.status(200).send(user);
   } 
   else {
-    const events = await getEvents(user.id);
-
-    if (existError(events)) {
-      res.status(404).send(events);
-    } else {
-      res.status(200).send(events);
-    }
+    res.status(200).send(await getEvents(user.id));
   }
 })
 
 app.post('/getEvent', async (req, res) => {
-  const user = await getUser (
-    req.query.login, 
-    req.query.password
-  );
+  const user = await getUser(req.query.login, req.query.password);
 
   if (existError(user)) {
-    res.status(404).send(user);
+    res.status(200).send(user);
   } 
   else {
-    const event = await getEvent (
+    res.status(200).send(await getEvent(
       req.query.startDate, 
       req.query.startTime,
       req.query.endDate, 
       req.query.endTime,
       req.query.short_desc
-    );
-
-    if (existError(event)) {
-      res.status(404).send(event);
-    } else {
-      res.status(200).send(event);
-    }
-  }
+    ));
+   }
 })
 
 app.post('/dropEvent', async (req, res) => {
-  const user = await getUser (
-    req.query.login, 
-    req.query.password
-  );
+  const user = await getUser (req.query.login, req.query.password);
 
   if (existError(user)) {
-    res.status(404).send(user);
+    res.status(200).send(user);
   } 
   else {
-    const event = await dropEvent (
-      user.id,
-      req.query.event_id,
-      req.query.tag
-    );
-    
-    if (existError(event)) {
-      res.status(404).send(event);
-    } 
-    else {
-      res.status(200).send(event);
-    }
+    res.status(200).send(await dropEvent(req.query.event_id, req.query.tag));
   }
 })
 
@@ -188,39 +114,33 @@ app.post('/setDateEvent', async (req, res) => {
     req.query.password
   );
 
+  const ADMIN_TAGS = ["exam", "work"];
+
   if (existError(user)) {
-    res.status(404).send(user);
+    res.status(200).send(user);
   } 
-  else {
-    const event = await setDateEvent (
+  if (user.role !== 'admin' && ADMIN_TAGS.includes(req.query.tag)) {
+    res.status(200).send({"error": "No tiene permisos para actualizar ese tipo tarea."});
+  } else {
+    res.status(200).send(await setDateEvent (
       req.query.event_id,
       req.query.startDate, 
       req.query.startTime,
       req.query.endDate, 
       req.query.endTime
-    );
-    
-    if (existError(event)) {
-      res.status(404).send(event);
-    } 
-    else {
-      res.status(200).send(event);
-    }
+    ));
   }
 })
 
 app.post('/createExamEvent', async (req, res) => {
-  const user = await getUser (
-    req.query.login, 
-    req.query.password
-  );
+  const user = await getUser(req.query.login, req.query.password);
 
   if (existError(user)) {
-    res.status(404).send(user);
+    res.status(200).send(user);
   } 
   else {
     if (user.role !== 'admin') {
-      res.status(404).send({"error": "No tiene permisos para crear ese tipo tarea."});
+      res.status(200).send({"error": "No tiene permisos para crear ese tipo tarea."});
     } 
     else {
       const event = await createExamEvent (
@@ -237,28 +157,20 @@ app.post('/createExamEvent', async (req, res) => {
         req.query.url_exam
       );
 
-      if (existError(event)) {
-        res.status(404).send(event);
-      } 
-      else {
-        res.status(200).send(event);
-      }
+      res.status(200).send(event);
     }
   }
 })
 
 app.post('/setExamEvent', async (req, res) => {
-  const user = await getUser (
-    req.query.login, 
-    req.query.password
-  );
+  const user = await getUser(req.query.login, req.query.password);
 
   if (existError(user)) {
-    res.status(404).send(user);
+    res.status(200).send(user);
   } 
   else {
     if (user.role !== 'admin') {
-      res.status(404).send({"error": "No tiene permisos para cambiar a ese tipo tarea."});
+      res.status(200).send({"error": "No tiene permisos para cambiar a este tipo tarea."});
     } 
     else {
       const event = await setExamEvent (
@@ -275,28 +187,20 @@ app.post('/setExamEvent', async (req, res) => {
         req.query.url_exam
       );
       
-      if (existError(event)) {
-        res.status(404).send(event);
-      } 
-      else {
-        res.status(200).send(event);
-      }
+      res.status(200).send(event);
     }
   }
 })
 
 app.post('/createWorkEvent', async (req, res) => {
-  const user = await getUser (
-    req.query.login, 
-    req.query.password
-  );
+  const user = await getUser(req.query.login, req.query.password);
 
   if (existError(user)) {
-    res.status(404).send(user);
+    res.status(200).send(user);
   } 
   else {
     if (user.role !== 'admin') {
-      res.status(404).send({"error": "No tiene permisos para crear ese tipo tarea."});
+      res.status(200).send({"error": "No tiene permisos para crear ese tipo tarea."});
     } 
     else {
       const event = await createWorkEvent (
@@ -312,29 +216,21 @@ app.post('/createWorkEvent', async (req, res) => {
         req.query.url_doc,
         req.query.url_work
       );
-
-      if (existError(event)) {
-        res.status(404).send(event);
-      } 
-      else {
-        res.status(200).send(event);
-      }
+      
+      res.status(200).send(event);
     }
   }
 })
 
 app.post('/setWorkEvent', async (req, res) => {
-  const user = await getUser (
-    req.query.login, 
-    req.query.password
-  );
+  const user = await getUser (req.query.login, req.query.password);
 
   if (existError(user)) {
-    res.status(404).send(user);
+    res.status(200).send(user);
   } 
   else {
     if (user.role !== 'admin') {
-      res.status(404).send({"error": "No tiene permisos para cambiar a ese tipo tarea."});
+      res.status(200).send({"error": "No tiene permisos para cambiar a este tipo tarea."});
     } 
     else {
       const event = await setWorkEvent (
@@ -351,24 +247,16 @@ app.post('/setWorkEvent', async (req, res) => {
         req.query.url_work
       );
       
-      if (existError(event)) {
-        res.status(404).send(event);
-      } 
-      else {
-        res.status(200).send(event);
-      }
+      res.status(200).send(event);
     }
   }
 })
 
 app.post('/createLeisureEvent', async (req, res) => {
-  const user = await getUser (
-    req.query.login, 
-    req.query.password
-  );
+  const user = await getUser(req.query.login, req.query.password);
 
   if (existError(user)) {
-    res.status(404).send(user);
+    res.status(200).send(user);
   } 
   else {
     const event = await createLeisureEvent (
@@ -383,23 +271,15 @@ app.post('/createLeisureEvent', async (req, res) => {
       req.query.url_ticket
     );
 
-    if (existError(event)) {
-      res.status(404).send(event);
-    } 
-    else {
-      res.status(200).send(event);
-    }
+    res.status(200).send(event);
   }
 })
 
 app.post('/setLeisureEvent', async (req, res) => {
-  const user = await getUser (
-    req.query.login, 
-    req.query.password
-  );
+  const user = await getUser(req.query.login, req.query.password);
 
   if (existError(user)) {
-    res.status(404).send(user);
+    res.status(200).send(user);
   } 
   else {
     const event = await setLeisureEvent (
@@ -413,24 +293,16 @@ app.post('/setLeisureEvent', async (req, res) => {
       req.query.url_img,
       req.query.url_ticket
     );
-    
-    if (existError(event)) {
-      res.status(404).send(event);
-    } 
-    else {
-      res.status(200).send(event);
-    }
+      
+    res.status(200).send(event);
   }
 })
 
 app.post('/createAppointmentEvent', async (req, res) => {
-  const user = await getUser (
-    req.query.login, 
-    req.query.password
-  );
+  const user = await getUser(req.query.login, req.query.password);
 
   if (existError(user)) {
-    res.status(404).send(user);
+    res.status(200).send(user);
   } 
   else {
     const event = await createAppointmentEvent (
@@ -446,12 +318,7 @@ app.post('/createAppointmentEvent', async (req, res) => {
       req.query.url_req
     );
 
-    if (existError(event)) {
-      res.status(404).send(event);
-    } 
-    else {
-      res.status(200).send(event);
-    }
+    res.status(200).send(event);
   }
 })
 
@@ -462,7 +329,7 @@ app.post('/setAppointmentEvent', async (req, res) => {
   );
 
   if (existError(user)) {
-    res.status(404).send(user);
+    res.status(200).send(user);
   } 
   else {
     const event = await setAppointmentEvent (
@@ -478,12 +345,7 @@ app.post('/setAppointmentEvent', async (req, res) => {
       req.query.url_req
     );
     
-    if (existError(event)) {
-      res.status(404).send(event);
-    } 
-    else {
-      res.status(200).send(event);
-    }
+    res.status(200).send(event);
   }
 })
 
