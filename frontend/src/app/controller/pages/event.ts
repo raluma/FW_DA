@@ -55,7 +55,6 @@ export class Event extends AppComponent {
         } else {
           window.location.href = "/";
         }
-        console.log(this.strStartDate)
         
         if (this.action === "add") {
           if (params['datetime'] === undefined || paramsLong === 3) {
@@ -81,15 +80,26 @@ export class Event extends AppComponent {
     const authUser = localStorage.getItem("authUser");
     const password = localStorage.getItem("password");
     
-    this.http.post(`http://localhost:3000/getEvent?login=${authUser}&password=${password}&startDate=${this.strStartDate}&startTime=${this.strStartTime}&endDate=${this.strEndDate}&endTime=${this.strEndTime}&short_desc=${this.short_desc}`, null)
-    .subscribe((obj : any) => {
-      if (this.action === "edit") {
+    if (this.action === "edit") {
+      this.http.post(`http://localhost:3000/getEvent?login=${authUser}&password=${password}&startDate=${this.strStartDate}&startTime=${this.strStartTime}&endDate=${this.strEndDate}&endTime=${this.strEndTime}&short_desc=${this.short_desc}`, null)
+      .subscribe((obj : any) => {
+        console.log(obj)
         this.renderer.setProperty(this.short_desc_element?.nativeElement, "value", obj["short_desc"]);
-      }
+        this.renderer.setProperty(this.startDatetime?.nativeElement, "value", `${obj["startDate"]}T${obj["startTime"]}`);
+        this.renderer.setProperty(this.endDatetime?.nativeElement, "value", `${obj["endDate"]}T${obj["endTime"]}`);
+      });
+    } else {
 
-      this.renderer.setProperty(this.startDatetime?.nativeElement, "value", `${obj["startDate"]}T${obj["startTime"]}`);
-      this.renderer.setProperty(this.endDatetime?.nativeElement, "value", `${obj["endDate"]}T${obj["endTime"]}`);
-    });
+      // Para esperar a que cargue el DOM //
+
+      setTimeout(() => {
+        this.renderer.setProperty(this.startDatetime?.nativeElement, "value", `${this.strStartDate}T${this.strStartTime}`);
+        this.renderer.setProperty(this.endDatetime?.nativeElement, "value", `${this.strEndDate}T${this.strEndTime}`);
+      }, 100);
+
+      // Para esperar a que cargue el DOM //  
+
+    }
   }
 }
 
