@@ -22,6 +22,21 @@ import { AppComponent } from '../app.component';
       setTimeout(() => {
         if (!this.modalStage && !this.isLoged()) this.toggleModal();
       }, 5000)
+
+      if (this.isLoged()) {
+        const authUser = localStorage.getItem("authUser");
+        const password = localStorage.getItem("password");
+
+        this.http.post(`http://localhost:3000/login?login=${authUser}&password=${password}`, null)
+        .subscribe((obj : any) => {
+          if (obj instanceof Object && obj['error'] !== undefined) {
+            alert(obj['error']);
+            localStorage.removeItem("authUser");
+            localStorage.removeItem("password");
+            window.location.href = "/";
+          } 
+        });
+      }
     }
 
     toggleModal() {
