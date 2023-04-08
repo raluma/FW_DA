@@ -50,17 +50,11 @@ import { Tag } from '../../model/tag';
       eventClick: this.handleEventClick.bind(this),
       eventsSet: this.handleEvents.bind(this)
     };
-  
-    ngOnInit(): void {
-      this.http.get<Tag[]>(`http://localhost:3000/getTags`)
-      .subscribe((data) => {
-        this.tags = data;
-      });
 
+    getEvents(events: EventInput[]) {
       this.http.post(`http://localhost:3000/getEvents?login=${this.authUser}&password=${this.password}`, null)
       .subscribe(data => {
-        let arrStartDate, arrStartTime, arrEndDate, arrEndTime;
-        let allDay = false;
+        let arrStartDate, arrStartTime, arrEndDate, arrEndTime, allDay;
   
         for (const [i, event] of Object.entries(data)) {
 
@@ -69,7 +63,9 @@ import { Tag } from '../../model/tag';
             arrStartDate = event['startDate'].split("-");
             arrStartTime = event['startTime'].split(":");
             arrEndDate = event['endDate'].split("-");
-            arrEndTime = event['endTime'].split(":");      
+            arrEndTime = event['endTime'].split(":"); 
+            let { color } = data;   
+            allDay = false;  
 
             if (arrStartDate[0] === arrEndDate[0] && arrStartDate[1] === arrEndDate[1]
               && Number(arrStartDate[2]) + 1 === Number(arrEndDate[2]) 
@@ -77,7 +73,7 @@ import { Tag } from '../../model/tag';
                 allDay = true
             }
 
-            this.initialEvents.push
+            events.push
             (
               {
                 id: event['event_id'],
@@ -91,21 +87,29 @@ import { Tag } from '../../model/tag';
                 url_doc: event['url_doc'],
                 url_attachment: event['url_attachment'],
                 allDay: allDay,
-                color: data['color']
+                color: color
               }
             );
           });
         }
-
-        // Para esperar a tener los datos para representarlos
-
-        setTimeout(() => {
-          this.calendarVisible = true;
-        }, 100);
-
-        // Para esperar a tener los datos para representarlos
-
       });
+    }
+  
+    ngOnInit(): void {
+      this.http.get<Tag[]>(`http://localhost:3000/getTags`)
+      .subscribe((data) => {
+        this.tags = data;
+      });
+
+      this.getEvents(this.initialEvents);
+
+      // Para esperar a tener los datos para representarlos //
+
+      setTimeout(() => {
+        this.calendarVisible = true;
+      }, 100);
+
+      // Para esperar a tener los datos para representarlos //
     }
 
     formatForEvent(str: string) {
@@ -116,34 +120,40 @@ import { Tag } from '../../model/tag';
   
     handleEvents(events: EventApi[]) {
       this.changeDetector.detectChanges();
-      let change = false;
-  
-      for (let i = 0; i < this.initialEvents.length; i++) {
-        if (this.initialEvents[i].start?.toString() !== events[i].start?.toString()) change = true;
-        if (this.initialEvents[i].end?.toString() !== events[i].end?.toString()) change = true;
-        if (this.initialEvents[i].title !== events[i].title) change = true;
-        if (this.initialEvents[i]['desc'] !== events[i].extendedProps['desc']) change = true;
-        if (this.initialEvents[i]['url_img'] !== events[i].extendedProps['url_img']) change = true;
-        if (this.initialEvents[i]['tag'] !== events[i].extendedProps['tag']) change = true;
-        if (this.initialEvents[i]['url_doc'] !== events[i].extendedProps['url_doc']) change = true;
-        if (this.initialEvents[i]['url_attachment'] !== events[i].extendedProps['url_attachment']) change = true;
-      }
-  
-      if (change) {
-        events.forEach(event => {
-          if (event.start !== null && event.end !== null) {
-            let startDate = `${event.start.getFullYear()}-${event.start.getMonth()+1}-${event.start.getDate()}`;
-            let startTime = `${event.start.getHours()}:${event.start.getMinutes()}`;
-            let endDate = `${event.end.getFullYear()}-${event.end.getMonth()+1}-${event.end.getDate()}`;
-            let endTime = `${event.end.getHours()}:${event.end.getMinutes()}`;
-  
-            this.http.post(`http://localhost:3000/setDateEvent?login=${this.authUser}&password=${this.password}&event_id=${event.id}&startDate=${startDate}&startTime=${startTime}&endDate=${endDate}&endTime=${endTime}`, null)
-              .subscribe(data => {
-                console.log(data);
-            });
+      let dbEvents: EventInput[] = []
+      
+      this.getEvents(dbEvents);
+
+      // Para esperar a tener los datos para comparlos y actualizar el evento que ha cambiado //
+
+      setTimeout(() => {
+        let dbEvent, event, startDate, startTime, endDate, endTime;
+
+        for (let i = 0; i < dbEvents.length; i++) {
+          dbEvent = dbEvents[i];
+          event = events[i];
+
+          if ((event.start !== null && event.end !== null) && (dbEvent.start?.toString() !== event.start?.toString() 
+              || dbEvent.end?.toString() !== event.end?.toString())) {
+              startDate = `${event.start.getFullYear()}-${event.start.getMonth() + 1}-${event.start.getDate()}`;
+              startTime = `${event.start.getHours()}:${event.start.getMinutes()}`;
+              endDate = `${event.end.getFullYear()}-${event.end.getMonth()+1}-${event.end.getDate()}`;
+              endTime = `${event.end.getHours()}:${event.end.getMinutes()}`;
+
+              this.http.post(`http://localhost:3000/setDateEvent?login=${this.authUser}&password=${this.password}&event_id=${events[i].id}&startDate=${startDate}&startTime=${startTime}&endDate=${endDate}&endTime=${endTime}&tag=${events[i].extendedProps['tag']}`, null)
+                .subscribe((obj : any ) => {
+                    if (obj instanceof Object && obj['error'] !== undefined) {
+                      alert(obj['error']); 
+                      window.location.reload();
+                    }
+                    console.log(obj);     
+                });
           }
-        });
-      }
+        }
+      }, 100);
+
+      // Para esperar a tener los datos para comparlos y actualizar el evento que ha cambiado //
+
     }
   
     handleWeekendsToggle() {
@@ -152,7 +162,7 @@ import { Tag } from '../../model/tag';
     }
   
     handleDateSelect(selectInfo: DateSelectArg) {
-      if (confirm(`¿Quieres crear un evento nuevo?`)) {
+      if (confirm(`¿Quieres CREAR un evento nuevo?`)) {
         const startDate = `${selectInfo.start.getFullYear()}-${selectInfo.start.getMonth()+1}-${selectInfo.start.getDate()}`;
         const startTime = `${selectInfo.start.getHours()}:${selectInfo.start.getMinutes()}`;
         const endDate = `${selectInfo.end.getFullYear()}-${selectInfo.end.getMonth()+1}-${selectInfo.end.getDate()}`;
@@ -163,7 +173,7 @@ import { Tag } from '../../model/tag';
     }
   
     handleEventClick(clickInfo: EventClickArg) {
-      if (confirm(`¿Quieres editar el evento '${clickInfo.event.title}'?`)) {
+      if (confirm(`¿Quieres VER/EDITAR el evento '${clickInfo.event.title}'?`)) {
         if (clickInfo.event.start !== null && clickInfo.event.end !== null) {
           const startDate = `${clickInfo.event.start.getFullYear()}-${clickInfo.event.start.getMonth()+1}-${clickInfo.event.start.getDate()}`;
           const startTime = `${clickInfo.event.start.getHours()}:${clickInfo.event.start.getMinutes()}`;
