@@ -18,8 +18,9 @@ export const getEvents = async (user_id) => {
         mainDataEvents = await Event.findAll
         (
             { where: 
-                { [Op.or]:  [{ user_id: user_id }, { see_all: true }] }
-            }
+                { [Op.or]:  [{ user_id: user_id }, { see_all: true }] },
+                order: [['id', 'ASC']]
+            },
         );
 
         for (let i = 0; i < mainDataEvents.length; i++) {
@@ -147,7 +148,7 @@ export const createTag = async (tagName, color, tagNameSP) => {
     }
 }
 
-export const dropEvent = async (user_id, event_id, tag) => {
+export const dropEvent = async (event_id, tag) => {
     let mainDataEvent, dataEvent;
 
     try {
@@ -156,7 +157,6 @@ export const dropEvent = async (user_id, event_id, tag) => {
             { where: 
                 {
                     id: event_id,
-                    user_id: user_id
                 }
             }
         );
