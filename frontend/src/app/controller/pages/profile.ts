@@ -27,10 +27,7 @@ export class Profile extends AppComponent {
 
     this.http.post(`http://localhost:3000/login?login=${authUser}&password=${password}`, null)
     .subscribe((obj : any) => {
-      if (obj instanceof Object && obj['error'] !== undefined) {
-        alert(obj['error']);
-        window.location.href = "/";
-      } else {
+      if (obj instanceof Object && obj['error'] === undefined) {
         this.user = obj;
         this.renderer.setProperty(this.userEmail?.nativeElement, "value", this.user.email);
         this.renderer.setProperty(this.userName?.nativeElement, "value", this.user.username);
