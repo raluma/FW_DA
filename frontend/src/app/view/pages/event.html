@@ -7,7 +7,7 @@
         </div>
 
         <div class="flex flex-row flex-wrap justify-around w-full m-4">
-            <form class="flex flex-row flex-wrap gap-y-2 w-full my-6" [formGroup]="eventForm" (ngSubmit)="this.action === 'add' ? createEvent : updateEvent($event)">
+            <form class="flex flex-row flex-wrap gap-y-2 w-full my-6" [formGroup]="eventForm" (ngSubmit)="this.action === 'add' ? createEvent($event) : updateEvent($event)">
                 <div class="flex flex-row flex-wrap justify-around w-full">
                     <div class="flex flex-col justify-center items-center w-1/3">
                         <img src="" alt="" class="w-48 h-48">
@@ -15,31 +15,37 @@
 
                     <div class="flex flex-col gap-6 items-center w-1/3 pt-16">
                         <label for="startDatetime">Fecha Inicial: </label>
-                        <input type="datetime-local" formControlName="newStartDatetime" name="startDatetime" id="" value="" class="w-56 border border-black" #startDatetime>
+                        <input type="datetime-local" formControlName="newStartDatetime" name="startDatetime" id="startDatetime" value="" class="w-56 border border-black" #startDatetime>
                     </div>
 
                     <div class="flex flex-col gap-6 items-center w-1/3 pt-16">
                         <label for="endDatetime">Fecha Final: </label>
-                        <input type="datetime-local" name="endDatetime" id="" value="" class="w-56 border border-black" #endDatetime>
+                        <input type="datetime-local" formControlName="newEndDatetime" name="endDatetime" id="endDatetime" value="" class="w-56 border border-black" #endDatetime>
                     </div>
                 </div>
 
                 <div class="flex flex-row flex-wrap justify-around w-full">
                     <div class="flex flex-col justify-center gap-6 items-center w-[40%] pt-16">
                         <label for="short_desc">Descripción corta: </label>
-                        <input type="text" name="short_desc" class="border border-black w-[80%]" #short_desc>
+                        <input type="text" formControlName="newShort_desc" name="short_desc" id ="short_desc" class="border border-black w-[80%]" #short_desc>
                     </div>
 
                     <div class="flex flex-col gap-4 items-center w-[60%] pt-10">
                         <label for="">Descripción: </label>
-                        <textarea name="" id="" cols="64" rows="4" class="border border-black resize-none"></textarea>
+                        <textarea formControlName="newDesc" name="desc" id="desc" cols="64" rows="4" class="border border-black resize-none"></textarea>
                     </div>
+                </div>
+
+                <div class="flex flex-row flex-wrap justify-end items-center w-full">
+                    <button type="submit" id="btn" class="bg-gray-500 text-white active:bg-gray-600 font-bold uppercase text-sm w-32 py-3 mb-6 mr-4 rounded shadow hover:shadow-lg outline-none focus:outline-none ease-linear transition-all duration-150">
+                        {{ this.action === 'add' ? "Crear" : "Actualizar" }}
+                    </button>
                 </div>
             </form>
         </div>
     </section>
 
-    <section class="flex flex-row justify-end w-full h-40">
-        <img src="" alt="" class="w-56 h-full border border-black" #bin>
+    <section class="flex flex-row justify-end w-full h-40 mb-8 mr-12">
+        <img ngSrc="../../../assets/images/bin.png" width="160" height="160" alt="bin" title="Borrar Evento" class="cursor-pointer hover:scale-95" #bin>
     </section>
 </article>

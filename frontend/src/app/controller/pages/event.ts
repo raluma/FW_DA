@@ -18,12 +18,18 @@ export class EventPage extends AppComponent {
   password = localStorage.getItem('password');
 
   action: string = "";
+
+  // Variables para añadir //
+
   strStartDate: string = "";
   strStartTime: string = "";
   strEndDate: string = "";
   strEndTime: string = "";
-  short_desc: string = "";
   tag: string = "";
+
+  // Variables para añadir //
+
+  event_id: Number = 0; // Variables para editar //
 
   event : Exam | Work | Leisure | Appointment = {
     event_id: 0,
@@ -34,7 +40,7 @@ export class EventPage extends AppComponent {
     short_desc: "",
     desc: "",
     url_img: "",
-    user_id: 1,
+    user_id: 0,
     see_all: false,
     url_ticket: ""
   };
@@ -46,47 +52,46 @@ export class EventPage extends AppComponent {
       if (this.VALID_ACTIONS.includes(params['action'])) {
         this.action = params['action'];
         this.tag = params['tag'];
+
         const paramsLong = Object.keys(params).length;
 
         if (this.action === "add") {
           if (params['tag'] === undefined || params['datetime'] === undefined || paramsLong === 4) {
             window.location.href = "/";
+          } else {
+            const strStartDatetime = params['datetime'].split("_")[0];
+            const strEndDatetime = params['datetime'].split("_")[1];
+            const strStartDate = strStartDatetime.split("&")[0];
+            const strStartTime = strStartDatetime.split("&")[1];
+            const strEndDate = strEndDatetime.split("&")[0];
+            const strEndTime = strEndDatetime.split("&")[1];
+
+
+            const arrStartDate = strStartDate.split("-");
+            const arrStartTime = strStartTime.split(":");
+            const arrEndDate = strEndDate.split("-");
+            const arrEndTime = strEndTime.split(":");
+
+            const startDatetime = new Date(arrStartDate[0], Number(arrStartDate[1]) + 1, arrStartDate[2], arrStartTime[0], arrStartTime[1]);
+            const endDatetime = new Date(arrEndDate[0], Number(arrEndDate[1]) + 1, arrEndDate[2], arrEndTime[0], arrEndTime[1]);
+
+            if (startDatetime instanceof Date && endDatetime instanceof Date) {
+              this.strStartDate = strStartDate;
+              this.strStartTime = strStartTime;
+              this.strEndDate = strEndDate;
+              this.strEndTime = strEndTime;
+            } else {
+              window.location.href = "/";
+            }
           }
         }
         else {
-          if (params['tag'] === undefined || params['short_desc'] === undefined || params['datetime'] === undefined) {
+          if (params['event_id'] === undefined) {
             window.location.href = "/";
+          } else {
+            this.event_id = params['event_id'];
           }
-        } 
-        
-        const strStartDatetime = params['datetime'].split("_")[0];
-        const strEndDatetime = params['datetime'].split("_")[1];
-        const strStartDate = strStartDatetime.split("&")[0];
-        const strStartTime = strStartDatetime.split("&")[1];
-        const strEndDate = strEndDatetime.split("&")[0];
-        const strEndTime = strEndDatetime.split("&")[1];
-
-
-        const arrStartDate = strStartDate.split("-");
-        const arrStartTime = strStartTime.split(":");
-        const arrEndDate = strEndDate.split("-");
-        const arrEndTime = strEndTime.split(":");
-
-        const startDatetime = new Date(arrStartDate[0], Number(arrStartDate[1]) + 1, arrStartDate[2], arrStartTime[0], arrStartTime[1]);
-        const endDatetime = new Date(arrEndDate[0], Number(arrEndDate[1]) + 1, arrEndDate[2], arrEndTime[0], arrEndTime[1]);
-
-        if (this.action === "edit") {
-          this.short_desc = params['short_desc'];
-        }
-
-        if (startDatetime instanceof Date && endDatetime instanceof Date) {
-          this.strStartDate = strStartDate;
-          this.strStartTime = strStartTime;
-          this.strEndDate = strEndDate;
-          this.strEndTime = strEndTime;
-        } else {
-          window.location.href = "/";
-        }
+        }   
       } else {
         window.location.href = "/";
       }
@@ -100,28 +105,33 @@ export class EventPage extends AppComponent {
 
   ngOnInit() {    
     if (this.action === "edit") {
-      this.http.post(`http://localhost:3000/getEvent?login=${this.authUser}&password=${this.password}&startDate=${this.strStartDate}&startTime=${this.strStartTime}&endDate=${this.strEndDate}&endTime=${this.strEndTime}&short_desc=${this.short_desc}&tag=${this.tag}`, null)
+      this.http.post(`http://localhost:3000/getEvent?login=${this.authUser}&password=${this.password}&event_id=${this.event_id}`, null)
       .subscribe((obj : any) => {
-        this.event = obj;
-        this.renderer.setProperty(this.short_desc_element?.nativeElement, "value", this.event.short_desc);
-        this.renderer.setProperty(this.startDatetime?.nativeElement, "value", `${this.event.startDate}T${this.event.startTime}`);
-        this.renderer.setProperty(this.endDatetime?.nativeElement, "value", `${this.event.endDate}T${this.event.endTime}`);
+        if (obj instanceof Object && obj['error'] === undefined) {
+          this.event = obj;
+          this.renderer.setProperty(this.short_desc_element?.nativeElement, "value", this.event.short_desc);
+          this.renderer.setProperty(this.startDatetime?.nativeElement, "value", `${this.event.startDate}T${this.event.startTime}`);
+          this.renderer.setProperty(this.endDatetime?.nativeElement, "value", `${this.event.endDate}T${this.event.endTime}`);
 
-        // Action Borrado del Evento //
+          // Action Borrado del Evento //
 
-        // this.renderer.listen(this.bin?.nativeElement, "click", () => {
-        //   this.http.post(`http://localhost:3000/dropEvent?login=${this.authUser}&password=${this.password}&event_id=${this.event.event_id}&tag=${this.tag}`, null)
-        //   .subscribe((obj : any) => {
-        //     if (obj instanceof Object && obj['error'] === undefined) {
-        //       alert(obj['exito']);
-        //     } else {
-        //       alert(obj['error']);
-        //     }
-        //   });
-        // });
+          this.renderer.listen(this.bin?.nativeElement, "click", () => {
+            this.http.post(`http://localhost:3000/dropEvent?login=${this.authUser}&password=${this.password}&event_id=${this.event.event_id}&tag=${this.tag}`, null)
+            .subscribe((obj : any) => {
+              if (obj instanceof Object && obj['error'] === undefined) {
+                alert(obj['exito']);
+              } else {
+                alert(obj['error']);
+              }
 
-        // Action Borrado del Evento //
+              window.location.href = "/";
+            });
+          });
 
+          // Action Borrado del Evento //
+        } else {
+          alert(obj['error']);
+        }
       });
     } else {
 
@@ -139,35 +149,81 @@ export class EventPage extends AppComponent {
 
   eventForm = new FormGroup(
     {
-      newStartDatetime: new FormControl()
+      newStartDatetime: new FormControl(),
+      newEndDatetime: new FormControl(),
+      newShort_desc: new FormControl(),
+      newDesc: new FormControl()
     }
   )
 
   createEvent(e: Event) {
     e.preventDefault();
-    
-    let { newStartDatetime } = this.eventForm.value;
 
-    console.log(newStartDatetime);
+    let { newStartDatetime, newEndDatetime, newShort_desc, newDesc } = this.eventForm.value; 
+    let newStartDate, newStartTime, newEndDate, newEndTime;
 
-    // this.http.post(`http://localhost:3000/createExamEvent?login=${this.authUser}&password=${this.password}&see_all=${true}&startTime=${this.strStartTime}&endDate=${this.strEndDate}&endTime=${this.strEndTime}&short_desc=${this.short_desc}&desc=${null}&url_img=${null}&url_doc=${null}&url_exam=${null}`, null)
-    //   .subscribe((obj : any) => {
-    //     alert(obj);
-    //   });
+    if (newStartDatetime !== null || newEndDatetime !== null || newShort_desc !== null || newDesc !== null) {
+
+      if (newStartDatetime === null) {
+        newStartDate = this.strStartDate;
+        newStartTime = this.strStartTime;
+      }
+
+      if (newEndDatetime === null) {
+        newEndDate = this.strEndDate;
+        newEndTime = this.strEndTime;
+      }
+
+      this.http.post(`http://localhost:3000/createExamEvent?login=${this.authUser}&password=${this.password}&see_all=${true}&startDate=${newStartDate}&startTime=${newStartTime}&endDate=${newEndDate}&endTime=${newEndTime}&short_desc=${newShort_desc}&desc=${newDesc}&url_img=${null}&url_doc=${null}&url_exam=${null}`, null)
+        .subscribe((obj : any) => {
+          if (obj instanceof Object && obj['error'] === undefined) {
+            alert(obj['exito']);
+            window.location.href = "/";
+          } else {
+            alert(obj['error']);
+          }
+        });
+    }
   }
 
 
   updateEvent(e: Event) {
     e.preventDefault();
 
-    let { newStartDatetime } = this.eventForm.value;
+    let { newStartDatetime, newEndDatetime, newShort_desc, newDesc } = this.eventForm.value; 
+    let newStartDate, newStartTime, newEndDate, newEndTime;
 
-    console.log(newStartDatetime);
+    if (newStartDatetime !== null || newEndDatetime !== null || newShort_desc !== null || newDesc !== null) {
 
-    // this.http.post(`http://localhost:3000/setExamEvent?login=${this.authUser}&password=${this.password}&see_all=${true}&startTime=${this.strStartTime}&endDate=${this.strEndDate}&endTime=${this.strEndTime}&short_desc=${this.short_desc}&desc=${null}&url_img=${null}&tag=${this.tag}&url_doc=${null}&url_exam=${null}`, null)
-    //   .subscribe((obj : any) => {
-    //     alert(obj);
-    //   });
+      if (newStartDatetime !== null) {
+        newStartDate = newStartDatetime.split("T")[0];
+        newStartTime = newStartDatetime.split("T")[1];
+      } else {
+        newStartDate = this.event.startDate;
+        newStartTime = this.event.startTime;
+      }
+
+      if (newEndDatetime !== null) {
+        newEndDate = newEndDatetime.split("T")[0];
+        newEndTime = newEndDatetime.split("T")[1];
+      } else {
+        newEndDate = this.event.endDate;
+        newEndTime = this.event.endTime;
+      }
+
+      if (newShort_desc === null) newShort_desc = this.event.short_desc;
+      if (newDesc === null) newDesc = this.event.desc;
+
+      this.http.post(`http://localhost:3000/setExamEvent?login=${this.authUser}&password=${this.password}&see_all=${true}&event_id=${this.event.event_id}&startDate=${newStartDate}&startTime=${newStartTime}&endDate=${newEndDate}&endTime=${newEndTime}&short_desc=${newShort_desc}&desc=${newDesc}&url_img=${null}&url_doc=${null}&url_exam=${null}`, null)
+        .subscribe((obj : any) => {
+          if (obj instanceof Object && obj['error'] === undefined) {
+            alert(obj['exito']);
+            window.location.href = "/";
+          } else {
+            alert(obj['error']);
+          }
+        });
+    }
   }
 }
 
