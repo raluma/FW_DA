@@ -36,26 +36,31 @@ export const event = {
     },
     startDate: {
         type: DataTypes.DATEONLY, 
+        primaryKey: true,
         allowNull: false,
         unique: false
     },
     startTime: {
         type: DataTypes.STRING, 
+        primaryKey: true,
         allowNull: false,
         unique: false
     },
     endDate: {
         type: DataTypes.DATEONLY, 
+        primaryKey: true,
         allowNull: false,
         unique: false
     },
     endTime: {
         type: DataTypes.STRING, 
+        primaryKey: true,
         allowNull: false,
         unique: false
     },
     short_desc: {
         type: DataTypes.STRING,
+        primaryKey: true,
         allowNull: false,
         unique: false
     },
@@ -71,6 +76,7 @@ export const event = {
     },
     tag: {
         type: DataTypes.STRING,
+        primaryKey: true,
         allowNull: false,
         unique: false
     },
