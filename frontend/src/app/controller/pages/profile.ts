@@ -32,6 +32,8 @@ export class ProfilePage extends AppComponent {
         this.renderer.setProperty(this.userEmail?.nativeElement, "value", this.user.email);
         this.renderer.setProperty(this.userName?.nativeElement, "value", this.user.username);
         this.renderer.setProperty(this.userPassword?.nativeElement, "value", this.user.password);
+      } else {
+        alert(obj['error']);
       }
     });
   }
@@ -49,11 +51,12 @@ export class ProfilePage extends AppComponent {
 
     let { newUsername, newEmail, newPassword } = this.updateUserForm.value;
 
-    if (newUsername === null) newUsername = this.user.username;
-    if (newEmail === null) newEmail = this.user.email;
-    if (newPassword === null) newPassword = this.user.password;
-
     if (newEmail !== null || newUsername !== null || newPassword !== null) {
+
+      if (newUsername === null) newUsername = this.user.username;
+      if (newEmail === null) newEmail = this.user.email;
+      if (newPassword === null) newPassword = this.user.password;
+
       this.http.post(`http://localhost:3000/setUser?login=${this.authUser}&password=${this.password}&username=${newUsername}&email=${newEmail}&newPassword=${newPassword}`, null)
         .subscribe((obj : any) => {
           if (obj instanceof Object && obj['error'] !== undefined) {
@@ -62,6 +65,7 @@ export class ProfilePage extends AppComponent {
             localStorage.setItem("authUser", newUsername);
             localStorage.setItem("password", newPassword);
             alert(obj["exito"]);
+            window.location.href = "/";
           }
       });
     }
