@@ -14,11 +14,11 @@ const routes: Routes = [
     component: ProfilePage
   },
   {
-    path: 'event/:action/:tag/:datetime',
+    path: 'event/:action/:tag/:datetime', // Action añadir
     component: EventPage
   },
   {
-    path: 'event/:action/:tag/:short_desc/:datetime',
+    path: 'event/:action/:event_id', // Action actualizar
     component: EventPage
   },
   { 
