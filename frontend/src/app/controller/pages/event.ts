@@ -98,7 +98,10 @@ export class EventPage extends AppComponent {
     });
   }
 
-  @ViewChild("short_desc") short_desc_element: ElementRef | undefined;
+  @ViewChild("tagColor") tagColor: ElementRef | undefined;
+  @ViewChild("tagNameSP") tagNameSP: ElementRef | undefined;
+  @ViewChild("short_desc") short_desc: ElementRef | undefined;
+  @ViewChild("desc") desc: ElementRef | undefined;
   @ViewChild("startDatetime") startDatetime: ElementRef | undefined;
   @ViewChild("endDatetime") endDatetime: ElementRef | undefined;
   @ViewChild("bin") bin: ElementRef | undefined;
@@ -109,9 +112,16 @@ export class EventPage extends AppComponent {
       .subscribe((obj : any) => {
         if (obj instanceof Object && obj['error'] === undefined) {
           this.event = obj;
-          this.renderer.setProperty(this.short_desc_element?.nativeElement, "value", this.event.short_desc);
+          this.renderer.setProperty(this.short_desc?.nativeElement, "value", this.event.short_desc);
+          this.renderer.setProperty(this.desc?.nativeElement, "value", this.event.desc);
           this.renderer.setProperty(this.startDatetime?.nativeElement, "value", `${this.event.startDate}T${this.event.startTime}`);
           this.renderer.setProperty(this.endDatetime?.nativeElement, "value", `${this.event.endDate}T${this.event.endTime}`);
+
+          this.http.get(`http://localhost:3000/getTag?tagName=${obj['tag']}`)
+          .subscribe((data : any) => {
+            this.renderer.setProperty(this.tagNameSP?.nativeElement, "textContent", data['tagNameSP']);
+            this.renderer.setStyle(this.tagColor?.nativeElement, "background-color", data['color']);
+          });
 
           // Action Borrado del Evento //
 
@@ -129,6 +139,7 @@ export class EventPage extends AppComponent {
           });
 
           // Action Borrado del Evento //
+
         } else {
           alert(obj['error']);
         }
@@ -140,6 +151,12 @@ export class EventPage extends AppComponent {
       setTimeout(() => {
         this.renderer.setProperty(this.startDatetime?.nativeElement, "value", `${this.strStartDate}T${this.strStartTime}`);
         this.renderer.setProperty(this.endDatetime?.nativeElement, "value", `${this.strEndDate}T${this.strEndTime}`);
+
+        this.http.get(`http://localhost:3000/getTag?tagName=${this.tag}`)
+        .subscribe((data : any) => {
+          this.renderer.setProperty(this.tagNameSP?.nativeElement, "textContent", data['tagNameSP']);
+          this.renderer.setStyle(this.tagColor?.nativeElement, "background-color", data['color']);
+        });
       }, 100);
 
       // Para esperar a que cargue el DOM //  
