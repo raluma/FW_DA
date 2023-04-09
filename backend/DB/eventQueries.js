@@ -94,7 +94,7 @@ export const getEvent = async (startDate, startTime, endDate, endTime, short_des
         }
 
     } catch (err) {
-        return {"error": "No se ha encontrado ese evento para ese usuario"};
+        return {"error": "No se ha encontrado este evento para este usuario"};
     }
 }
 
