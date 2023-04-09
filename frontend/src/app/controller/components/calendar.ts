@@ -143,10 +143,10 @@ import { Tag } from '../../model/tag';
 
           if ((event.start !== null && event.end !== null) && (dbEvent.start?.toString() !== event.start?.toString() 
               || dbEvent.end?.toString() !== event.end?.toString())) {
-              startDate = `${event.start.getFullYear()}-${event.start.getMonth() + 1}-${event.start.getDate()}`;
-              startTime = `${event.start.getHours()}:${event.start.getMinutes()}`;
-              endDate = `${event.end.getFullYear()}-${event.end.getMonth()+1}-${event.end.getDate()}`;
-              endTime = `${event.end.getHours()}:${event.end.getMinutes()}`;
+              startDate = event.startStr;
+              startTime = event.start.toTimeString().substring(0, 5);
+              endDate = event.endStr;
+              endTime = event.end.toTimeString().substring(0, 5);
 
               this.http.post(`http://localhost:3000/setDateEvent?login=${this.authUser}&password=${this.password}&event_id=${events[i].id}&startDate=${startDate}&startTime=${startTime}&endDate=${endDate}&endTime=${endTime}&tag=${events[i].extendedProps['tag']}`, null)
                 .subscribe((obj : any ) => {
@@ -158,7 +158,7 @@ import { Tag } from '../../model/tag';
                 });
           }
         }
-      }, 100);
+      }, 500);
 
       // Para esperar a tener los datos para comparlos y actualizar el evento que ha cambiado //
 
@@ -228,13 +228,7 @@ Elija el tipo de evento que quiere crear:
     handleEventClick(clickInfo: EventClickArg) {
       if (confirm(`¿Quieres VER/EDITAR el evento '${clickInfo.event.title}'?`)) {
         if (clickInfo.event.start !== null && clickInfo.event.end !== null) {
-          const startDate = clickInfo.event.startStr;
-          const startTime = clickInfo.event.start.toTimeString().substring(0, 5);
-          const endDate = clickInfo.event.endStr
-          const endTime = clickInfo.event.end.toTimeString().substring(0, 5);
-        
-          window.location.href = 
-          `event/edit/${clickInfo.event.extendedProps['tag']}/${clickInfo.event.title}/${startDate}&${startTime}_${endDate}&${endTime}`;
+          window.location.href = `event/edit/${clickInfo.event.id}`;
         }
       }
     }
