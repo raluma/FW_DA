@@ -92,7 +92,8 @@ app.post('/getEvent', async (req, res) => {
       req.query.startTime,
       req.query.endDate, 
       req.query.endTime,
-      req.query.short_desc
+      req.query.short_desc,
+      req.query.tag
     ));
    }
 })
