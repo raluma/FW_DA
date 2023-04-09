@@ -1,13 +1,13 @@
 <header class="flex flex-row justify-end items-center w-full h-16 bg-black"></header>
 
-<article class="flex flex-col items-center justify-center h-[92.3vh]">
-    <section class="flex flex-row flex-wrap justify-center items-start w-3/4 border border-[#fac863] rounded-lg">
+<article class="flex flex-col items-center justify-between h-[92.3vh]">
+    <section class="flex flex-row flex-wrap justify-center items-start w-3/4 border border-[#fac863] rounded-lg mt-10">
         <div class="flex flex-row justify-start items-center w-full h-14 bg-[#fac863] rounded-t-lg">
             <fa-icon [icon]="this.action === 'add' ? faCalendar : faEdit" class="ml-6 text-2xl text-orange-700" title="Crear"></fa-icon>
         </div>
 
         <div class="flex flex-row flex-wrap justify-around w-full m-4">
-            <form action="" class="flex flex-row flex-wrap gap-y-2 w-full my-6">
+            <form class="flex flex-row flex-wrap gap-y-2 w-full my-6" [formGroup]="eventForm" (ngSubmit)="this.action === 'add' ? createEvent : updateEvent($event)">
                 <div class="flex flex-row flex-wrap justify-around w-full">
                     <div class="flex flex-col justify-center items-center w-1/3">
                         <img src="" alt="" class="w-48 h-48">
@@ -15,7 +15,7 @@
 
                     <div class="flex flex-col gap-6 items-center w-1/3 pt-16">
                         <label for="startDatetime">Fecha Inicial: </label>
-                        <input type="datetime-local" name="startDatetime" id="" value="" class="w-56 border border-black" #startDatetime>
+                        <input type="datetime-local" formControlName="newStartDatetime" name="startDatetime" id="" value="" class="w-56 border border-black" #startDatetime>
                     </div>
 
                     <div class="flex flex-col gap-6 items-center w-1/3 pt-16">
@@ -37,5 +37,9 @@
                 </div>
             </form>
         </div>
+    </section>
+
+    <section class="flex flex-row justify-end w-full h-40">
+        <img src="" alt="" class="w-56 h-full border border-black" #bin>
     </section>
 </article>

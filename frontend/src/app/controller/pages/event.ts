@@ -1,13 +1,15 @@
 import { Component, ElementRef, Renderer2, ViewChild } from '@angular/core';
 import { AppComponent } from '../app.component';
 import { ActivatedRoute } from '@angular/router';
+import { FormControl, FormGroup } from '@angular/forms';
 import { faCalendar, faEdit } from '@fortawesome/free-regular-svg-icons';
+import { Exam, Work, Leisure, Appointment } from 'src/app/model/event';
 
 @Component({
   selector: 'event',
   templateUrl: '../../view/pages/event.html'
 })
-export class Event extends AppComponent { 
+export class EventPage extends AppComponent { 
   faCalendar = faCalendar;
   faEdit = faEdit;
   VALID_ACTIONS = ["add", "edit"];
@@ -15,7 +17,7 @@ export class Event extends AppComponent {
   authUser = localStorage.getItem('authUser');
   password = localStorage.getItem('password');
 
-  action = "";
+  action: string = "";
   strStartDate: string = "";
   strStartTime: string = "";
   strEndDate: string = "";
@@ -23,21 +25,36 @@ export class Event extends AppComponent {
   short_desc: string = "";
   tag: string = "";
 
+  event : Exam | Work | Leisure | Appointment = {
+    event_id: 0,
+    startDate: "",
+    startTime: "",
+    endDate: "",
+    endTime: "",
+    short_desc: "",
+    desc: "",
+    url_img: "",
+    user_id: 1,
+    see_all: false,
+    url_ticket: ""
+  };
+
   constructor(public route: ActivatedRoute, private renderer: Renderer2) {
     super();
 
     this.route.params.subscribe(params => {
       if (this.VALID_ACTIONS.includes(params['action'])) {
         this.action = params['action'];
+        this.tag = params['tag'];
         const paramsLong = Object.keys(params).length;
 
         if (this.action === "add") {
-          if (params['datetime'] === undefined || paramsLong === 3) {
+          if (params['tag'] === undefined || params['datetime'] === undefined || paramsLong === 4) {
             window.location.href = "/";
           }
         }
         else {
-          if (params['short_desc'] === undefined || params['datetime'] === undefined || params['tag'] === undefined) {
+          if (params['tag'] === undefined || params['short_desc'] === undefined || params['datetime'] === undefined) {
             window.location.href = "/";
           }
         } 
@@ -60,7 +77,6 @@ export class Event extends AppComponent {
 
         if (this.action === "edit") {
           this.short_desc = params['short_desc'];
-          this.tag = params['tag'];
         }
 
         if (startDatetime instanceof Date && endDatetime instanceof Date) {
@@ -80,14 +96,32 @@ export class Event extends AppComponent {
   @ViewChild("short_desc") short_desc_element: ElementRef | undefined;
   @ViewChild("startDatetime") startDatetime: ElementRef | undefined;
   @ViewChild("endDatetime") endDatetime: ElementRef | undefined;
+  @ViewChild("bin") bin: ElementRef | undefined;
 
   ngOnInit() {    
     if (this.action === "edit") {
       this.http.post(`http://localhost:3000/getEvent?login=${this.authUser}&password=${this.password}&startDate=${this.strStartDate}&startTime=${this.strStartTime}&endDate=${this.strEndDate}&endTime=${this.strEndTime}&short_desc=${this.short_desc}&tag=${this.tag}`, null)
       .subscribe((obj : any) => {
-        this.renderer.setProperty(this.short_desc_element?.nativeElement, "value", obj["short_desc"]);
-        this.renderer.setProperty(this.startDatetime?.nativeElement, "value", `${obj["startDate"]}T${obj["startTime"]}`);
-        this.renderer.setProperty(this.endDatetime?.nativeElement, "value", `${obj["endDate"]}T${obj["endTime"]}`);
+        this.event = obj;
+        this.renderer.setProperty(this.short_desc_element?.nativeElement, "value", this.event.short_desc);
+        this.renderer.setProperty(this.startDatetime?.nativeElement, "value", `${this.event.startDate}T${this.event.startTime}`);
+        this.renderer.setProperty(this.endDatetime?.nativeElement, "value", `${this.event.endDate}T${this.event.endTime}`);
+
+        // Action Borrado del Evento //
+
+        // this.renderer.listen(this.bin?.nativeElement, "click", () => {
+        //   this.http.post(`http://localhost:3000/dropEvent?login=${this.authUser}&password=${this.password}&event_id=${this.event.event_id}&tag=${this.tag}`, null)
+        //   .subscribe((obj : any) => {
+        //     if (obj instanceof Object && obj['error'] === undefined) {
+        //       alert(obj['exito']);
+        //     } else {
+        //       alert(obj['error']);
+        //     }
+        //   });
+        // });
+
+        // Action Borrado del Evento //
+
       });
     } else {
 
@@ -103,18 +137,37 @@ export class Event extends AppComponent {
     }
   }
 
-  createEvent() {
-    this.http.post(`http://localhost:3000/createExamEvent?login=${this.authUser}&password=${this.password}&see_all=${true}&startTime=${this.strStartTime}&endDate=${this.strEndDate}&endTime=${this.strEndTime}&short_desc=${this.short_desc}&desc=${null}&url_img=${null}&url_doc=${null}&url_exam=${null}`, null)
-      .subscribe((obj : any) => {
-        alert(obj);
-      });
+  eventForm = new FormGroup(
+    {
+      newStartDatetime: new FormControl()
+    }
+  )
+
+  createEvent(e: Event) {
+    e.preventDefault();
+    
+    let { newStartDatetime } = this.eventForm.value;
+
+    console.log(newStartDatetime);
+
+    // this.http.post(`http://localhost:3000/createExamEvent?login=${this.authUser}&password=${this.password}&see_all=${true}&startTime=${this.strStartTime}&endDate=${this.strEndDate}&endTime=${this.strEndTime}&short_desc=${this.short_desc}&desc=${null}&url_img=${null}&url_doc=${null}&url_exam=${null}`, null)
+    //   .subscribe((obj : any) => {
+    //     alert(obj);
+    //   });
   }
 
-  updateEvent() {
-    this.http.post(`http://localhost:3000/setExamEvent?login=${this.authUser}&password=${this.password}&see_all=${true}&startTime=${this.strStartTime}&endDate=${this.strEndDate}&endTime=${this.strEndTime}&short_desc=${this.short_desc}&desc=${null}&url_img=${null}&tag=${this.tag}&url_doc=${null}&url_exam=${null}`, null)
-      .subscribe((obj : any) => {
-        alert(obj);
-      });
+
+  updateEvent(e: Event) {
+    e.preventDefault();
+
+    let { newStartDatetime } = this.eventForm.value;
+
+    console.log(newStartDatetime);
+
+    // this.http.post(`http://localhost:3000/setExamEvent?login=${this.authUser}&password=${this.password}&see_all=${true}&startTime=${this.strStartTime}&endDate=${this.strEndDate}&endTime=${this.strEndTime}&short_desc=${this.short_desc}&desc=${null}&url_img=${null}&tag=${this.tag}&url_doc=${null}&url_exam=${null}`, null)
+    //   .subscribe((obj : any) => {
+    //     alert(obj);
+    //   });
   }
 }
 
