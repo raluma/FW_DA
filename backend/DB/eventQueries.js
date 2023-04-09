@@ -49,7 +49,7 @@ export const getEvents = async (user_id) => {
     }
 }
 
-export const getEvent = async (startDate, startTime, endDate, endTime, short_desc) => {
+export const getEvent = async (startDate, startTime, endDate, endTime, short_desc, tag) => {
     let mainDataEvent, dataEvent;
 
     try {
@@ -66,7 +66,8 @@ export const getEvent = async (startDate, startTime, endDate, endTime, short_des
                     startTime: `${arrStartTime[0]}:${arrStartTime[1]}`,
                     endDate: new Date(arrEndDate[0], arrEndDate[1]-1, arrEndDate[2]),
                     endTime: `${arrEndTime[0]}:${arrEndTime[1]}`,
-                    short_desc: short_desc
+                    short_desc: short_desc,
+                    tag: tag
                 } 
             }
         );
@@ -293,7 +294,8 @@ export const setExamEvent = async (see_all, event_id, startDate, startTime, endD
                 endTime: `${arrEndTime[0]}:${arrEndTime[1]}`,
                 short_desc: short_desc,
                 desc: desc,
-                url_img: url_img
+                url_img: url_img,
+                see_all: see_all
             },
             { where: 
                 {
@@ -406,7 +408,8 @@ export const setWorkEvent = async (see_all, event_id, startDate, startTime, endD
                 endTime: `${arrEndTime[0]}:${arrEndTime[1]}`,
                 short_desc: short_desc,
                 desc: desc,
-                url_img: url_img
+                url_img: url_img,
+                see_all: see_all
             },
             { where: 
                 {
