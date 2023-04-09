@@ -49,25 +49,17 @@ export const getEvents = async (user_id) => {
     }
 }
 
-export const getEvent = async (startDate, startTime, endDate, endTime, short_desc, tag) => {
+export const getEvent = async (event_id) => {
     let mainDataEvent, dataEvent;
 
     try {
-        const arrStartDate = startDate.split("-");
-        const arrStartTime = startTime.split(":");
-        const arrEndDate = endDate.split("-");
-        const arrEndTime = endTime.split(":");
+     
 
         mainDataEvent = await Event.findOne
         (
             { where: 
                 { 
-                    startDate: new Date(arrStartDate[0], arrStartDate[1]-1, arrStartDate[2]),
-                    startTime: `${arrStartTime[0]}:${arrStartTime[1]}`,
-                    endDate: new Date(arrEndDate[0], arrEndDate[1]-1, arrEndDate[2]),
-                    endTime: `${arrEndTime[0]}:${arrEndTime[1]}`,
-                    short_desc: short_desc,
-                    tag: tag
+                    id: event_id
                 } 
             }
         );
@@ -78,7 +70,7 @@ export const getEvent = async (startDate, startTime, endDate, endTime, short_des
             (
                 { where: 
                     { 
-                        event_id: mainDataEvent['id']
+                        event_id: event_id
                     } 
                 }
             );
@@ -183,7 +175,7 @@ export const dropEvent = async (event_id, tag) => {
     }
 }
 
-export const setDateEvent = async (event_id, startDate, startTime, endDate, endTime) => {
+export const setDateEvent = async (event_id, user_id, startDate, startTime, endDate, endTime) => {
     let mainDataEvent
 
     try {
@@ -202,13 +194,14 @@ export const setDateEvent = async (event_id, startDate, startTime, endDate, endT
             },
             { where: 
                 {
-                    id: event_id
+                    id: event_id,
+                    user_id: user_id
                 }
             }
         );
 
         if (mainDataEvent !== null) { return {"exito": "Se ha actualizado la fecha con éxito"}; } 
-        else { return {"error": "No se ha podido actualizar la fecha con éxito."}; }
+        else { return {"error": "No se ha podido actualizar con éxito. Este evento no ha sido creado por ti."}; }
     } catch (err) {
         return {"error": "Los parámetros no son válidos o suficientes."};
     }
@@ -218,6 +211,8 @@ export const setDateEvent = async (event_id, startDate, startTime, endDate, endT
 
 export const createExamEvent = async (see_all, user_id, startDate, startTime, endDate, endTime, short_desc, desc, url_img, url_doc, url_exam) => {
     let mainDataEvent, dataEvent;
+
+    console.log(see_all, user_id, startDate, startTime, endDate, endTime, short_desc, desc, url_img, url_doc, url_exam)
 
     try {
         const arrStartDate = startDate.split("-");
@@ -276,7 +271,7 @@ export const createExamEvent = async (see_all, user_id, startDate, startTime, en
     }
 }
 
-export const setExamEvent = async (see_all, event_id, startDate, startTime, endDate, endTime, short_desc, desc, url_img, url_doc, url_exam) => {
+export const setExamEvent = async (see_all, event_id, user_id, startDate, startTime, endDate, endTime, short_desc, desc, url_img, url_doc, url_exam) => {
     let mainDataEvent, dataEvent;
 
     try {
@@ -299,7 +294,8 @@ export const setExamEvent = async (see_all, event_id, startDate, startTime, endD
             },
             { where: 
                 {
-                    id: event_id
+                    id: event_id,
+                    user_id: user_id
                 }
             }
         );
@@ -322,7 +318,7 @@ export const setExamEvent = async (see_all, event_id, startDate, startTime, endD
             if (dataEvent !== null) { return {"exito": "Se ha actualizado con éxito"}; } 
             else { return {"error": "No se ha podido actualizar con éxito."}; }
         } else {
-            return {"error": "No se ha podido actualizar con éxito."};
+            return {"error": "No se ha podido actualizar con éxito. Este evento no ha sido creado por ti."};
         }
     } catch (err) {
         return {"error": "Los parámetros no son válidos o suficientes."};
@@ -390,7 +386,7 @@ export const createWorkEvent = async (see_all, user_id, startDate, startTime, en
     }
 }
 
-export const setWorkEvent = async (see_all, event_id, startDate, startTime, endDate, endTime, short_desc, desc, url_img, team, url_doc, url_work) => {
+export const setWorkEvent = async (see_all, event_id, user_id, startDate, startTime, endDate, endTime, short_desc, desc, url_img, team, url_doc, url_work) => {
     let mainDataEvent, dataEvent;
 
     try {
@@ -413,7 +409,8 @@ export const setWorkEvent = async (see_all, event_id, startDate, startTime, endD
             },
             { where: 
                 {
-                    id: event_id
+                    id: event_id,
+                    user_id: user_id
                 }
             }
         );
@@ -437,7 +434,7 @@ export const setWorkEvent = async (see_all, event_id, startDate, startTime, endD
             if (dataEvent !== null) { return {"exito": "Se ha actualizado con éxito"}; } 
             else { return {"error": "No se ha podido actualizar con éxito."}; }
         } else {
-            return {"error": "No se ha podido actualizar con éxito."};
+            return {"error": "No se ha podido actualizar con éxito. Este evento no ha sido creado por ti."};
         }
     } catch (err) {
         return {"error": "Los parámetros no son válidos o suficientes."};
@@ -502,7 +499,7 @@ export const createLeisureEvent = async (user_id, startDate, startTime, endDate,
     }
 }
 
-export const setLeisureEvent = async (event_id, startDate, startTime, endDate, endTime, short_desc, desc, url_img, url_ticket) => {
+export const setLeisureEvent = async (event_id, user_id, startDate, startTime, endDate, endTime, short_desc, desc, url_img, url_ticket) => {
     let mainDataEvent, dataEvent;
 
     try {
@@ -524,7 +521,8 @@ export const setLeisureEvent = async (event_id, startDate, startTime, endDate, e
             },
             { where: 
                 {
-                    id: event_id
+                    id: event_id,
+                    user_id: user_id
                 }
             }
         );
@@ -546,7 +544,7 @@ export const setLeisureEvent = async (event_id, startDate, startTime, endDate, e
             if (dataEvent !== null) { return {"exito": "Se ha actualizado con éxito"}; } 
             else { return {"error": "No se ha podido actualizar con éxito."}; }
         } else {
-            return {"error": "No se ha podido actualizar con éxito."};
+            return {"error": "No se ha podido actualizar con éxito. Este evento no ha sido creado por ti."};
         }
     } catch (err) {
         return {"error": "Los parámetros no son válidos o suficientes."};
@@ -612,7 +610,7 @@ export const createAppointmentEvent = async (user_id, startDate, startTime, endD
     }
 }
 
-export const setAppointmentEvent = async (event_id, startDate, startTime, endDate, endTime, short_desc, desc, url_img, url_ticket, url_req) => {
+export const setAppointmentEvent = async (event_id, user_id, startDate, startTime, endDate, endTime, short_desc, desc, url_img, url_ticket, url_req) => {
     let mainDataEvent, dataEvent;
 
     try {
@@ -634,7 +632,8 @@ export const setAppointmentEvent = async (event_id, startDate, startTime, endDat
             },
             { where: 
                 {
-                    id: event_id
+                    id: event_id,
+                    user_id: user_id
                 }
             }
         );
@@ -657,7 +656,7 @@ export const setAppointmentEvent = async (event_id, startDate, startTime, endDat
             if (dataEvent !== null) { return {"exito": "Se ha actualizado con éxito"}; } 
             else { return {"error": "No se ha podido actualizar con éxito."}; }
         } else {
-            return {"error": "No se ha podido actualizar con éxito."};
+            return {"error": "No se ha podido actualizar con éxito. Este evento no ha sido creado por ti."};
         }
     } catch (err) {
         return {"error": "Los parámetros no son válidos o suficientes."};
