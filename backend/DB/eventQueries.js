@@ -212,8 +212,6 @@ export const setDateEvent = async (event_id, user_id, startDate, startTime, endD
 export const createExamEvent = async (see_all, user_id, startDate, startTime, endDate, endTime, short_desc, desc, url_img, url_doc, url_exam) => {
     let mainDataEvent, dataEvent;
 
-    console.log(see_all, user_id, startDate, startTime, endDate, endTime, short_desc, desc, url_img, url_doc, url_exam)
-
     try {
         const arrStartDate = startDate.split("-");
         const arrStartTime = startTime.split(":");
