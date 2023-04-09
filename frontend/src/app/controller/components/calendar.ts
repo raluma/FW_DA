@@ -5,18 +5,26 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import listPlugin from '@fullcalendar/list';
 import { faCalendar, faEdit } from '@fortawesome/free-regular-svg-icons';
-import { Home } from '../pages/home';
+import { HomePage } from '../pages/home';
+import { User } from 'src/app/model/user';
 import { Tag } from '../../model/tag';
 
 @Component({
     selector: 'calendar',
     templateUrl: '../../view/components/calendar.html'
   })
-  export class Calendar extends Home {
+  export class Calendar extends HomePage {
     calendarVisible = false;
     faCalendar = faCalendar;
     faEdit = faEdit;
 
+    user : User = {
+      username: '',
+      password: '',
+      email: '',
+      role: ''
+    };
+  
     authUser = localStorage.getItem("authUser");
     password = localStorage.getItem("password");
 
@@ -162,14 +170,59 @@ import { Tag } from '../../model/tag';
     }
   
     handleDateSelect(selectInfo: DateSelectArg) {
-      if (confirm(`¿Quieres CREAR un evento nuevo?`)) {
-        const startDate = selectInfo.startStr;
-        const startTime = selectInfo.start.toTimeString().substring(0, 5);
-        const endDate = selectInfo.endStr;
-        const endTime = selectInfo.end.toTimeString().substring(0, 5)
+      this.http.post(`http://localhost:3000/login?login=${this.authUser}&password=${this.password}`, null)
+      .subscribe((userObj : any) => {
+        if (userObj instanceof Object && userObj['error'] === undefined) {
+          this.http.get<Tag[]>(`http://localhost:3000/getTags`)
+          .subscribe((tagObj : any) => {
+            let numberTag;
+            this.user = userObj;
+            this.tags = tagObj;
+           
 
-        window.location.href = `event/add/${startDate}&${startTime}_${endDate}&${endTime}`;
-      }
+            if (this.user.role === 'admin') {
+
+              numberTag = prompt
+              ( 
+`
+Elija el tipo de evento que quiere crear:
+
+  1. Examen.
+  2. Trabajo.
+  3. Ocio.
+  4. Cita. 
+
+`
+              ); 
+            } else {
+
+              numberTag = prompt
+              (
+`
+Elija el tipo de evento que quiere crear:
+
+  1. Ocio.
+  2. Cita.
+
+`
+              ); 
+            }
+
+            if (numberTag !== null && Number(numberTag) >= 1 && Number(numberTag) <= this.tags.length) {
+              if (confirm(`¿Está seguro que quiere CREAR un/a ${this.tags[Number(numberTag) - 1].tagNameSP}?`)) {
+                const startDate = selectInfo.startStr;
+                const startTime = selectInfo.start.toTimeString().substring(0, 5);
+                const endDate = selectInfo.endStr;
+                const endTime = selectInfo.end.toTimeString().substring(0, 5)
+
+                window.location.href = `event/add/${this.tags[Number(numberTag) - 1].tagName}/${startDate}&${startTime}_${endDate}&${endTime}`;
+              }
+            } else if (numberTag !== null) {
+              alert("Debe elegir una opción disponible");
+            }
+          });
+        }
+      });
     }
   
     handleEventClick(clickInfo: EventClickArg) {
