@@ -22,19 +22,19 @@
 
                     <div class="flex flex-col gap-6 items-center w-1/3 pt-16">
                         <label for="startDatetime">Fecha Inicial: </label>
-                        <input type="datetime-local" formControlName="newStartDatetime" name="startDatetime" id="startDatetime" value="" class="w-56 border border-black" #startDatetime>
+                        <input type="datetime-local" formControlName="newStartDatetime" name="startDatetime" id="startDatetime" value="" class="w-56 border border-black" #startDatetime required>
                     </div>
 
                     <div class="flex flex-col gap-6 items-center w-1/3 pt-16">
                         <label for="endDatetime">Fecha Final: </label>
-                        <input type="datetime-local" formControlName="newEndDatetime" name="endDatetime" id="endDatetime" value="" class="w-56 border border-black" #endDatetime>
+                        <input type="datetime-local" formControlName="newEndDatetime" name="endDatetime" id="endDatetime" value="" class="w-56 border border-black" #endDatetime required>
                     </div>
                 </div>
 
                 <div class="flex flex-row flex-wrap justify-around w-full">
                     <div class="flex flex-col justify-center gap-6 items-center w-[40%]">
                         <label for="short_desc">Descripción corta: </label>
-                        <input type="text" formControlName="newShort_desc" name="short_desc" id ="short_desc" class="border border-black w-[80%] pl-1" #short_desc>
+                        <input type="text" formControlName="newShort_desc" name="short_desc" id ="short_desc" class="border border-black w-[80%] pl-1" #short_desc required>
                     </div>
 
                     <div class="flex flex-col gap-4 items-center w-[60%]">
