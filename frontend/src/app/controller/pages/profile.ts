@@ -7,7 +7,7 @@ import { User } from 'src/app/model/user';
   selector: 'profile',
   templateUrl: '../../view/pages/profile.html'
 })
-export class Profile extends AppComponent { 
+export class ProfilePage extends AppComponent { 
   constructor(private renderer: Renderer2) { super(); }
 
   @ViewChild("userEmail") userEmail: ElementRef | undefined;
@@ -21,11 +21,11 @@ export class Profile extends AppComponent {
     role: ''
   };
 
-  ngOnInit(): void {
-    const authUser = localStorage.getItem("authUser");
-    const password = localStorage.getItem("password");
+  authUser = localStorage.getItem("authUser");
+  password = localStorage.getItem("password");
 
-    this.http.post(`http://localhost:3000/login?login=${authUser}&password=${password}`, null)
+  ngOnInit(): void {
+    this.http.post(`http://localhost:3000/login?login=${this.authUser}&password=${this.password}`, null)
     .subscribe((obj : any) => {
       if (obj instanceof Object && obj['error'] === undefined) {
         this.user = obj;
@@ -38,17 +38,14 @@ export class Profile extends AppComponent {
 
   updateUserForm = new FormGroup(
     {
-        newUsername: new FormControl(),
-        newEmail: new FormControl(),
-        newPassword: new FormControl()
+      newUsername: new FormControl(),
+      newEmail: new FormControl(),
+      newPassword: new FormControl()
     }
   )
 
   updateUser(e: Event) {
     e.preventDefault();
-
-    const authUser = localStorage.getItem("authUser");
-    const password = localStorage.getItem("password");
 
     let { newUsername, newEmail, newPassword } = this.updateUserForm.value;
 
@@ -57,7 +54,7 @@ export class Profile extends AppComponent {
     if (newPassword === null) newPassword = this.user.password;
 
     if (newEmail !== null || newUsername !== null || newPassword !== null) {
-      this.http.post(`http://localhost:3000/setUser?login=${authUser}&password=${password}&username=${newUsername}&email=${newEmail}&newPassword=${newPassword}`, null)
+      this.http.post(`http://localhost:3000/setUser?login=${this.authUser}&password=${this.password}&username=${newUsername}&email=${newEmail}&newPassword=${newPassword}`, null)
         .subscribe((obj : any) => {
           if (obj instanceof Object && obj['error'] !== undefined) {
             alert(obj['error']);
