@@ -5,7 +5,7 @@ import { AppComponent } from '../app.component';
   selector: 'home',
   templateUrl: '../../view/pages/home.html'
 })
-export class Home extends AppComponent {}
+export class HomePage extends AppComponent {}
 
 
  

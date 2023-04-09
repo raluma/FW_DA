@@ -8,20 +8,20 @@ import { FullCalendarModule } from '@fullcalendar/angular';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { Home } from './pages/home';
+import { HomePage } from './pages/home';
 import { Header } from './components/header';
 import { Calendar } from './components/calendar';
-import { Event } from './pages/event';
-import { Profile } from './pages/profile';
+import { EventPage } from './pages/event';
+import { ProfilePage } from './pages/profile';
 
 @NgModule({
   declarations: [
     AppComponent,
-    Home,
+    HomePage,
     Header,
     Calendar,
-    Profile,
-    Event
+    ProfilePage,
+    EventPage
   ],
   imports: [
     BrowserModule,
