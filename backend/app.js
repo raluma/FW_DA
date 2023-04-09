@@ -12,10 +12,10 @@ dotenv.config();
 const app = express();
 
 // createAdmin();
-// createExamEvent(true, 1, "2023-04-06", "0:0", "2023-04-07", "0:0", "Examen", null, null, null, null);
-// createWorkEvent(true, 1, "2023-04-06", "0:0", "2023-04-07", "0:0", "Trabajo", null, null, null, null, null);
-// createLeisureEvent(1, "2023-04-06", "0:0", "2023-04-07", "0:0", "Ocio", null, null, null);
-// createAppointmentEvent(1, "2023-04-06", "0:0", "2023-04-07", "0:0", "Cita", null, null, null, null);
+// createExamEvent(true, 1, "2023-04-06", "00:00", "2023-04-07", "00:00", "Examen", null, null, null, null);
+// createWorkEvent(true, 1, "2023-04-06", "00:00", "2023-04-07", "00:00", "Trabajo", null, null, null, null, null);
+// createLeisureEvent(1, "2023-04-06", "00:00", "2023-04-07", "00:00", "Ocio", null, null, null);
+// createAppointmentEvent(1, "2023-04-06", "00:00", "2023-04-07", "00:00", "Cita", null, null, null, null);
 // createTag("exam", "dodgerBlue", "Examen");
 // createTag("work", "orange", "Trabajo");
 // createTag("leisure", "violet", "Ocio");
@@ -87,14 +87,7 @@ app.post('/getEvent', async (req, res) => {
     res.status(200).send(user);
   } 
   else {
-    res.status(200).send(await getEvent(
-      req.query.startDate, 
-      req.query.startTime,
-      req.query.endDate, 
-      req.query.endTime,
-      req.query.short_desc,
-      req.query.tag
-    ));
+    res.status(200).send(await getEvent(req.query.event_id));
    }
 })
 
@@ -115,16 +108,12 @@ app.post('/setDateEvent', async (req, res) => {
     req.query.password
   );
 
-  const ADMIN_TAGS = ["exam", "work"];
-
   if (existError(user)) {
     res.status(200).send(user);
-  } 
-  if (user.role !== 'admin' && ADMIN_TAGS.includes(req.query.tag)) {
-    res.status(200).send({"error": "No tiene permisos para actualizar ese tipo tarea."});
   } else {
     res.status(200).send(await setDateEvent (
       req.query.event_id,
+      user.id,
       req.query.startDate, 
       req.query.startTime,
       req.query.endDate, 
@@ -170,40 +159,22 @@ app.post('/setExamEvent', async (req, res) => {
     res.status(200).send(user);
   } 
   else {
-    if (user.role !== 'admin') {
-      res.status(200).send({"error": "No tiene permisos para cambiar a este tipo tarea."});
-    } 
-    else {
-      const event = await getEvent(
-        req.query.startDate, 
-        req.query.startTime,
-        req.query.endDate, 
-        req.query.endTime,
-        req.query.short_desc,
-        req.query.tag  
-      );
-
-      if (existError(event)) {
-        res.status(200).send(event);
-      }
-      else {
-        const exam = await setExamEvent(
-          req.query.see_all,
-          event.id,
-          req.query.startDate, 
-          req.query.startTime,
-          req.query.endDate, 
-          req.query.endTime,
-          req.query.short_desc,
-          req.query.desc,
-          req.query.url_img,
-          req.query.url_doc,
-          req.query.url_exam
-        );
-        
-        res.status(200).send(exam);
-      }
-    }
+    const exam = await setExamEvent(
+      req.query.see_all,
+      req.query.event_id,
+      user.id,
+      req.query.startDate, 
+      req.query.startTime,
+      req.query.endDate, 
+      req.query.endTime,
+      req.query.short_desc,
+      req.query.desc,
+      req.query.url_img,
+      req.query.url_doc,
+      req.query.url_exam
+    );
+    
+    res.status(200).send(exam); 
   }
 })
 
@@ -244,40 +215,22 @@ app.post('/setWorkEvent', async (req, res) => {
     res.status(200).send(user);
   } 
   else {
-    if (user.role !== 'admin') {
-      res.status(200).send({"error": "No tiene permisos para cambiar a este tipo tarea."});
-    } 
-    else {
-      const event = await getEvent(
-        req.query.startDate, 
-        req.query.startTime,
-        req.query.endDate, 
-        req.query.endTime,
-        req.query.short_desc,
-        req.query.tag  
-      );
-
-      if (existError(event)) {
-        res.status(200).send(event);
-      } 
-      else {
-        const work = await setWorkEvent (
-          req.query.see_all,
-          event.id,
-          req.query.startDate, 
-          req.query.startTime,
-          req.query.endDate, 
-          req.query.endTime,
-          req.query.short_desc,
-          req.query.desc,
-          req.query.url_img,
-          req.query.url_doc,
-          req.query.url_work
-        );
-        
-        res.status(200).send(work);
-      }
-    }
+    const work = await setWorkEvent (
+      req.query.see_all,
+      req.query.event_id,
+      user.id,
+      req.query.startDate, 
+      req.query.startTime,
+      req.query.endDate, 
+      req.query.endTime,
+      req.query.short_desc,
+      req.query.desc,
+      req.query.url_img,
+      req.query.url_doc,
+      req.query.url_work
+    );
+    
+    res.status(200).send(work);
   }
 })
 
@@ -311,33 +264,20 @@ app.post('/setLeisureEvent', async (req, res) => {
     res.status(200).send(user);
   } 
   else {
-    const event = await getEvent(
+    const leisure = await setLeisureEvent (
+      req.query.event_id,
+      user.id,
       req.query.startDate, 
       req.query.startTime,
       req.query.endDate, 
       req.query.endTime,
       req.query.short_desc,
-      req.query.tag  
+      req.query.desc,
+      req.query.url_img,
+      req.query.url_ticket
     );
-
-    if (existError(event)) {
-      res.status(200).send(event);
-    }
-    else {
-      const leisure = await setLeisureEvent (
-        event.id,
-        req.query.startDate, 
-        req.query.startTime,
-        req.query.endDate, 
-        req.query.endTime,
-        req.query.short_desc,
-        req.query.desc,
-        req.query.url_img,
-        req.query.url_ticket
-      );
-        
-      res.status(200).send(leisure);
-    }
+      
+    res.status(200).send(leisure);
   }
 })
 
@@ -375,34 +315,22 @@ app.post('/setAppointmentEvent', async (req, res) => {
     res.status(200).send(user);
   } 
   else {
-    const event = await getEvent(
+    const appointment = await setAppointmentEvent (
+      req.query.event_id,
+      user.id,
       req.query.startDate, 
       req.query.startTime,
       req.query.endDate, 
       req.query.endTime,
       req.query.short_desc,
-      req.query.tag  
+      req.query.desc,
+      req.query.url_img,
+      req.query.url_ticket,
+      req.query.url_req
     );
-
-    if (existError(event)) {
-      res.status(200).send(event);
-    }
-    else {
-      const appointment = await setAppointmentEvent (
-        event.id,
-        req.query.startDate, 
-        req.query.startTime,
-        req.query.endDate, 
-        req.query.endTime,
-        req.query.short_desc,
-        req.query.desc,
-        req.query.url_img,
-        req.query.url_ticket,
-        req.query.url_req
-      );
-      
-      res.status(200).send(appointment);
-    }
+    
+    res.status(200).send(appointment);
+    
   }
 })
 
