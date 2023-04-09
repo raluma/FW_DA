@@ -119,10 +119,6 @@ import { Tag } from '../../model/tag';
 
       // Para esperar a tener los datos para representarlos //
     }
-
-    formatForEvent(str: string) {
-      return str[0].toUpperCase() + str.slice(1, str.length);
-    }
   
     constructor(private changeDetector: ChangeDetectorRef) { super(); }
   
@@ -158,7 +154,7 @@ import { Tag } from '../../model/tag';
                 });
           }
         }
-      }, 500);
+      }, 100);
 
       // Para esperar a tener los datos para comparlos y actualizar el evento que ha cambiado //
 

@@ -48,7 +48,7 @@
       </div>
     </section>
 
-    <h2 class="text-4xl font-bold mt-4">Eventos ({{this.initialEvents.length}})</h2>
+    <h2 class="text-4xl font-bold mt-4">Eventos ({{ this.initialEvents.length }})</h2>
   </article>
 </aside>
 
@@ -57,7 +57,7 @@
     <full-calendar class="mt-4 px-10" *ngIf='calendarVisible' [options]='calendarOptions'>
         <ng-template #eventContent let-arg>
           <article class="flex flex-row flex-wrap items-center ml-1"> 
-              <b>{{ formatForEvent(arg.event.title) }}</b>
+              <b>{{ arg.event.title }}</b>
           </article>
       </ng-template>
     </full-calendar>
