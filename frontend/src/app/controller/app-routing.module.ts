@@ -18,7 +18,7 @@ const routes: Routes = [
     component: Event
   },
   {
-    path: 'event/:action/:short_desc/:datetime',
+    path: 'event/:action/:tag/:short_desc/:datetime',
     component: Event
   },
   { 
