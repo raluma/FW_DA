@@ -181,7 +181,7 @@ import { Tag } from '../../model/tag';
           const endTime = clickInfo.event.end.toTimeString().substring(0, 5);
         
           window.location.href = 
-          `event/edit/${clickInfo.event.title}/${startDate}&${startTime}_${endDate}&${endTime}`;
+          `event/edit/${clickInfo.event.extendedProps['tag']}/${clickInfo.event.title}/${startDate}&${startTime}_${endDate}&${endTime}`;
         }
       }
     }
