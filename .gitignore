@@ -7,9 +7,6 @@ test-project-host-*
 dist/
 dist-schema/
 
-# IDEs
-tsconfig.json
-
 # Logs
 .angular
 coverage/
